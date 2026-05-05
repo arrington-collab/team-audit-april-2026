@@ -38,7 +38,7 @@ h1{font-size:20px;font-weight:700;margin-bottom:2px}
 .pa-info h3{font-size:14px;font-weight:700}
 .pa-info .pa-role{font-size:11px;color:#64748b}
 .pa-info .pa-summary{font-size:12px;color:#475569;margin-top:3px;line-height:1.4}
-.mg{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:10px}
+.mg{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:10px}
 .metric{text-align:center;padding:6px;background:#f8fafc;border-radius:6px}
 .metric .mv{font-size:16px;font-weight:700;color:#0ea5e9}
 .metric .ml{font-size:9px;color:#64748b;text-transform:uppercase;letter-spacing:.3px}
@@ -74,6 +74,9 @@ h1{font-size:20px;font-weight:700;margin-bottom:2px}
 <div class="chart-row">
   <div class="chart-box"><h3>Active Days (of ~22 working days)</h3><canvas id="daysChart"></canvas></div>
   <div class="chart-box"><h3>Daily Action Rate (avg/active day)</h3><canvas id="rateChart"></canvas></div>
+</div>
+<div class="chart-row">
+  <div class="chart-box full"><h3>Avg Hours per Week per Rep</h3><canvas id="weeklyHrsChart"></canvas></div>
 </div>
 <div class="section-title">Individual Assessments</div>
 <div id="personCards"></div>
@@ -124,6 +127,19 @@ new Chart(document.getElementById('rateChart'),{
   data:{labels:rNames,datasets:[{data:rSorted.map(function(p){return p.dailyRate;}),backgroundColor:rColors,borderRadius:4}]},
   options:{responsive:true,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{font:{size:9},maxRotation:45,minRotation:25}},y:{beginAtZero:true,grid:{color:'#f1f5f9'},title:{display:true,text:'Actions/Day',font:{size:10}}}}}
 });
+P.forEach(function(p){
+  var activeWeeks=0;
+  if(p.weekTotals){Object.keys(p.weekTotals).forEach(function(k){if(p.weekTotals[k]>0)activeWeeks++;});}
+  p.avgHrsPerWeek=activeWeeks>0?Math.round(p.estHours/activeWeeks*10)/10:0;
+});
+var wSorted=P.slice().sort(function(a,b){return b.avgHrsPerWeek-a.avgHrsPerWeek;});
+var wNames=wSorted.map(function(p){return p.name.split(' ').slice(0,2).join(' ');});
+var wColors=wSorted.map(function(p){return p.isBench?'#3b82f6':p.avgHrsPerWeek>=30?'#22c55e':p.avgHrsPerWeek>=20?'#84cc16':p.avgHrsPerWeek>=12?'#f59e0b':'#ef4444';});
+new Chart(document.getElementById('weeklyHrsChart'),{
+  type:'bar',
+  data:{labels:wNames,datasets:[{data:wSorted.map(function(p){return p.avgHrsPerWeek;}),backgroundColor:wColors,borderRadius:4}]},
+  options:{responsive:true,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{font:{size:10},maxRotation:45,minRotation:25}},y:{beginAtZero:true,grid:{color:'#f1f5f9'},title:{display:true,text:'Hrs/Week',font:{size:10}}}}}
+});
 var personEl=document.getElementById('personCards');
 var scoreBg=function(s){return s>=8?'#22c55e':s>=6?'#84cc16':s>=5?'#eab308':s>=4?'#f97316':'#ef4444';};
 var cardOrder=P.slice().sort(function(a,b){
@@ -136,6 +152,7 @@ cardOrder.forEach(function(p){
   if(p.ratio<0.5)prodClass='bad';
   var hrsClass=p.estHours>=120?'good':p.estHours>=80?'':'warn';
   if(p.estHours<50)hrsClass='bad';
+  var wkHrsClass=p.avgHrsPerWeek>=30?'good':p.avgHrsPerWeek>=20?'':p.avgHrsPerWeek>=12?'warn':'bad';
   var wkHtml='';
   if(p.weekTotals&&Object.keys(p.weekTotals).length>0){
     var wks=Object.keys(p.weekTotals);
@@ -148,7 +165,7 @@ cardOrder.forEach(function(p){
     });
     wkHtml+='</div></div>';
   }
-  personEl.innerHTML+='<div class="person-audit'+(p.isBench?' bcard':'')+'"><div class="pa-header"><div class="pa-score" style="background:'+scoreBg(p.score)+'">'+p.score+'</div><div class="pa-info"><h3>'+p.name+'</h3><div class="pa-role">'+p.role+'</div><div class="pa-summary">'+p.summary+'</div></div></div><div class="mg"><div class="metric"><div class="mv">'+p.total.toLocaleString()+'</div><div class="ml">Total Actions</div></div><div class="metric '+(p.productive>=2400?'good':p.productive>=1000?'':'bad')+'"><div class="mv">'+p.productive.toLocaleString()+'</div><div class="ml">Productive</div></div><div class="metric '+prodClass+'"><div class="mv">'+p.ratio+'x</div><div class="ml">Prod/Read</div></div><div class="metric"><div class="mv">'+p.activeDays+'</div><div class="ml">Active Days</div></div><div class="metric '+hrsClass+'"><div class="mv">'+p.estHours+'h</div><div class="ml">Est. Hours</div></div><div class="metric"><div class="mv">'+p.dailyRate+'</div><div class="ml">Actions/Day</div></div></div><div class="flags">'+flagsHtml+'</div>'+wkHtml+'</div>';
+  personEl.innerHTML+='<div class="person-audit'+(p.isBench?' bcard':'')+'"><div class="pa-header"><div class="pa-score" style="background:'+scoreBg(p.score)+'">'+p.score+'</div><div class="pa-info"><h3>'+p.name+'</h3><div class="pa-role">'+p.role+'</div><div class="pa-summary">'+p.summary+'</div></div></div><div class="mg"><div class="metric"><div class="mv">'+p.total.toLocaleString()+'</div><div class="ml">Total Actions</div></div><div class="metric '+(p.productive>=2400?'good':p.productive>=1000?'':'bad')+'"><div class="mv">'+p.productive.toLocaleString()+'</div><div class="ml">Productive</div></div><div class="metric '+prodClass+'"><div class="mv">'+p.ratio+'x</div><div class="ml">Prod/Read</div></div><div class="metric"><div class="mv">'+p.activeDays+'</div><div class="ml">Active Days</div></div><div class="metric '+hrsClass+'"><div class="mv">'+p.estHours+'h</div><div class="ml">Est. Hours</div></div><div class="metric"><div class="mv">'+p.dailyRate+'</div><div class="ml">Actions/Day</div></div><div class="metric '+wkHrsClass+'"><div class="mv">'+p.avgHrsPerWeek+'h</div><div class="ml">Avg Hrs/Wk</div></div></div><div class="flags">'+flagsHtml+'</div>'+wkHtml+'</div>';
 });
 </script>
 </body>
