@@ -1,357 +1,538 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>ClaimsForce Team Activity - Feb-Apr 2026</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ClaimsForce Team Activity - Jan-Apr 2026</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js" integrity="sha384-iU8HYtnGQ8Cy4zl7gbNMOhsDTTKX02BTXptVP/vqAWIaTfM7isw76iyZCsjL2eVi" crossorigin="anonymous"></script>
 <style>
-:root{color-scheme:light}
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f8fafc;color:#1e293b;padding:16px;font-size:13px}
-h1{font-size:20px;font-weight:700;margin-bottom:2px}
-.sub{font-size:12px;color:#64748b;margin-bottom:16px}
-.bench-note{background:#eff6ff;border-left:4px solid #3b82f6;padding:10px 14px;border-radius:0 8px 8px 0;margin-bottom:16px;font-size:12px;color:#1e40af}
-.scores-row{display:flex;gap:6px;margin-bottom:20px;flex-wrap:wrap}
-.sc{background:#fff;border-radius:8px;padding:10px 8px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.08);flex:1;min-width:70px}
-.sc.benchmark{border:2px solid #3b82f6}
-.sc .name{font-size:10px;font-weight:600;color:#475569;margin-bottom:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.sc .role{font-size:9px;color:#94a3b8;margin-bottom:4px}
-.sc .score{font-size:28px;font-weight:800;line-height:1}
-.sc .slash{font-size:14px;font-weight:400;color:#94a3b8}
-.sc .hrs{font-size:10px;color:#64748b;margin-top:3px}
-.s1,.s2,.s3{color:#ef4444}.s4{color:#f97316}.s5,.s6{color:#eab308}.s7{color:#84cc16}.s8,.s9,.s10{color:#22c55e}
-.chart-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
-.chart-box{background:#fff;border-radius:10px;padding:14px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
-.chart-box h3{font-size:12px;font-weight:600;margin-bottom:2px;color:#334155}
-.chart-desc{font-size:10px;color:#64748b;margin-bottom:8px;line-height:1.4}
-.chart-box.full{grid-column:1/-1}
-.person-audit{background:#fff;border-radius:10px;padding:16px;box-shadow:0 1px 3px rgba(0,0,0,.08);margin-bottom:12px}
-.person-audit.bcard{border:2px solid #3b82f6}
-.pa-header{display:flex;align-items:flex-start;gap:14px;margin-bottom:12px}
-.pa-score{width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:#fff;flex-shrink:0}
-.pa-info h3{font-size:14px;font-weight:700}
-.pa-info .pa-role{font-size:11px;color:#64748b}
-.pa-info .pa-summary{font-size:12px;color:#475569;margin-top:3px;line-height:1.4}
-.mg{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:10px}
-.metric{text-align:center;padding:6px;background:#f8fafc;border-radius:6px}
-.metric .mv{font-size:16px;font-weight:700;color:#0ea5e9}
-.metric .ml{font-size:9px;color:#64748b;text-transform:uppercase;letter-spacing:.3px}
-.metric.warn .mv{color:#f59e0b}.metric.bad .mv{color:#ef4444}.metric.good .mv{color:#22c55e}
-.flags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
-.flag{font-size:10px;padding:3px 8px;border-radius:16px;font-weight:600}
-.flag.red{background:#fef2f2;color:#dc2626}
-.flag.yellow{background:#fefce8;color:#ca8a04}
-.flag.green{background:#f0fdf4;color:#16a34a}
-.flag.blue{background:#eff6ff;color:#2563eb}
-.section-title{font-size:15px;font-weight:700;margin:20px 0 10px;color:#1e293b}
-.wk-row{display:flex;gap:3px;margin-top:8px;align-items:flex-end}
-.wk-bar{flex:1;text-align:center}
-.wk-bar .bar{background:#3b82f6;border-radius:2px 2px 0 0;margin:0 auto;width:80%}
-.wk-bar .wl{font-size:8px;color:#94a3b8;margin-top:2px}
-.wk-bar .wv{font-size:9px;color:#475569;font-weight:600}
-.tab-bar{display:flex;gap:0;margin-bottom:16px;border-bottom:2px solid #e2e8f0}
-.tab-bar button{background:none;border:none;padding:10px 20px;font-size:13px;font-weight:600;color:#64748b;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .2s}
-.tab-bar button:hover{color:#1e293b;background:#f1f5f9}
-.tab-bar button.active{color:#3b82f6;border-bottom-color:#3b82f6}
-.tab-content{display:none}
-.tab-content.active{display:block}
+:root {
+  --bg: #0f1117;
+  --surface: #1a1d27;
+  --surface2: #242836;
+  --border: #2e3345;
+  --text: #e4e6f0;
+  --text2: #9ca3b8;
+  --accent: #6c8aff;
+  --green: #4ade80;
+  --yellow: #facc15;
+  --red: #f87171;
+  --orange: #fb923c;
+  --cyan: #22d3ee;
+  --purple: #a78bfa;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--bg); color:var(--text); font-family:'Segoe UI',system-ui,-apple-system,sans-serif; line-height:1.5; }
+.container { max-width:1400px; margin:0 auto; padding:20px; }
+header { text-align:center; padding:30px 0 10px; }
+header h1 { font-size:1.8rem; font-weight:700; color:var(--text); }
+header .subtitle { font-size:0.95rem; color:var(--text2); margin-top:4px; }
+
+/* Tabs */
+.tab-bar { display:flex; gap:4px; justify-content:center; margin:20px 0 24px; flex-wrap:wrap; }
+.tab-btn { padding:10px 24px; border:1px solid var(--border); background:var(--surface); color:var(--text2); border-radius:8px; cursor:pointer; font-size:0.9rem; font-weight:500; transition:all .2s; }
+.tab-btn:hover { background:var(--surface2); color:var(--text); }
+.tab-btn.active { background:var(--accent); color:#fff; border-color:var(--accent); }
+
+/* Score cards */
+.score-row { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:10px; margin-bottom:24px; }
+.score-card { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:12px; text-align:center; transition:transform .15s; }
+.score-card:hover { transform:translateY(-2px); }
+.score-card.bench { border-color:var(--yellow); box-shadow:0 0 12px rgba(250,204,21,.15); }
+.score-card .name { font-size:0.8rem; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.score-card .role { font-size:0.65rem; color:var(--text2); margin:2px 0 6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.score-card .score-circle { width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 6px; font-size:1.1rem; font-weight:700; }
+.score-card .hours { font-size:0.7rem; color:var(--text2); }
+.score-card .bench-label { font-size:0.6rem; color:var(--yellow); font-weight:600; text-transform:uppercase; letter-spacing:.5px; margin-top:2px; }
+
+/* Score colors */
+.s1 .score-circle { background:rgba(248,113,113,.2); color:var(--red); }
+.s2 .score-circle { background:rgba(248,113,113,.15); color:#fb7185; }
+.s3 .score-circle { background:rgba(251,146,60,.15); color:var(--orange); }
+.s4 .score-circle { background:rgba(250,204,21,.12); color:#fbbf24; }
+.s5 .score-circle { background:rgba(250,204,21,.15); color:var(--yellow); }
+.s6 .score-circle { background:rgba(74,222,128,.12); color:#86efac; }
+.s7 .score-circle { background:rgba(74,222,128,.18); color:var(--green); }
+.s8 .score-circle { background:rgba(34,211,238,.15); color:var(--cyan); }
+.s9 .score-circle { background:rgba(108,138,255,.2); color:var(--accent); }
+.s10 .score-circle { background:rgba(167,139,250,.2); color:var(--purple); }
+
+/* Charts */
+.charts-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:24px; }
+.chart-box { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:16px; }
+.chart-box h3 { font-size:0.85rem; color:var(--text2); margin-bottom:10px; font-weight:500; }
+.chart-box canvas { width:100%!important; }
+
+/* Bench note */
+.bench-note { background:var(--surface); border:1px solid var(--border); border-left:3px solid var(--yellow); border-radius:8px; padding:14px 18px; margin-bottom:24px; font-size:0.82rem; color:var(--text2); line-height:1.6; }
+.bench-note strong { color:var(--yellow); }
+
+/* Assessment cards */
+.assessments { display:grid; grid-template-columns:repeat(auto-fill,minmax(420px,1fr)); gap:14px; margin-bottom:40px; }
+.assess-card { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:16px; }
+.assess-card.bench { border-color:var(--yellow); }
+.assess-card .card-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px; }
+.assess-card .card-header .left .aname { font-size:1rem; font-weight:600; }
+.assess-card .card-header .left .arole { font-size:0.75rem; color:var(--text2); }
+.assess-card .card-header .ascore { font-size:1.4rem; font-weight:700; }
+.assess-card .metrics-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:10px; }
+.assess-card .metric { background:var(--surface2); border-radius:6px; padding:8px; text-align:center; }
+.assess-card .metric .mv { font-size:1rem; font-weight:600; }
+.assess-card .metric .ml { font-size:0.65rem; color:var(--text2); text-transform:uppercase; }
+.assess-card .flags { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:10px; }
+.assess-card .flag { font-size:0.7rem; padding:3px 8px; border-radius:4px; font-weight:500; }
+.flag-green { background:rgba(74,222,128,.12); color:var(--green); }
+.flag-yellow { background:rgba(250,204,21,.12); color:var(--yellow); }
+.flag-red { background:rgba(248,113,113,.12); color:var(--red); }
+.flag-blue { background:rgba(108,138,255,.12); color:var(--accent); }
+.flag-cyan { background:rgba(34,211,238,.12); color:var(--cyan); }
+.assess-card .summary { font-size:0.78rem; color:var(--text2); margin-bottom:10px; line-height:1.5; }
+.assess-card .weekly-chart { height:80px; }
+
+@media(max-width:900px) {
+  .charts-grid { grid-template-columns:1fr; }
+  .assessments { grid-template-columns:1fr; }
+  .score-row { grid-template-columns:repeat(auto-fill,minmax(120px,1fr)); }
+}
 </style>
 </head>
 <body>
-<h1>ClaimsForce Team Activity Audit</h1>
-<div class="sub">February - April 2026 &middot; 13 Team Members &middot; Activity Log Data</div>
-<div class="bench-note">
-<strong>Benchmark:</strong> Ashley Sacramento is the 5/10 midpoint. Hours estimated from action volume (~45 actions/hr calibration). Chris (Dept Head) and Yane (#2) evaluated with role context.
+<div class="container">
+  <header>
+    <h1>ClaimsForce Team Activity - Jan-Apr 2026</h1>
+    <p class="subtitle">January - April 2026 &middot; 14 Team Members &middot; Activity Log Data</p>
+  </header>
+  <div class="tab-bar" id="tabBar"></div>
+  <div id="scoreRow" class="score-row"></div>
+  <div class="bench-note">
+    <strong>Benchmark Note:</strong> Ashley Sacramento is the 5/10 midpoint. Hours estimated from action volume (~45 actions/hr calibration). Chris (Head of Claims Mgmt), Kneil, Yane, and Juan David (Senior Claims Analysts) evaluated with role context.
+  </div>
+  <div class="charts-grid" id="chartsGrid">
+    <div class="chart-box"><h3>Total Volume by Type</h3><canvas id="chartVolume"></canvas></div>
+    <div class="chart-box"><h3>Productive Ratio</h3><canvas id="chartRatio"></canvas></div>
+    <div class="chart-box"><h3>Estimated Hours</h3><canvas id="chartHours"></canvas></div>
+    <div class="chart-box"><h3>Active Days</h3><canvas id="chartDays"></canvas></div>
+    <div class="chart-box"><h3>Daily Rate (Actions/Day)</h3><canvas id="chartDaily"></canvas></div>
+    <div class="chart-box"><h3>Avg Hours / Week</h3><canvas id="chartWeekly"></canvas></div>
+  </div>
+  <div id="assessments" class="assessments"></div>
 </div>
-
-<div class="tab-bar">
-  <button class="active" onclick="switchTab('feb')">February</button>
-  <button onclick="switchTab('mar')">March</button>
-  <button onclick="switchTab('apr')">April</button>
-  <button onclick="switchTab('combined')">Combined (Feb&ndash;Apr)</button>
-</div>
-
-<div id="tab-feb" class="tab-content active"></div>
-<div id="tab-mar" class="tab-content"></div>
-<div id="tab-apr" class="tab-content"></div>
-<div id="tab-combined" class="tab-content"></div>
 
 <script>
-// DATA
-var FEB_DATA=[
-  {"name":"Ashley Sacramento","role":"Benchmark (5/10)","isBench":true,"total":4141,"reads":1962,"creates":1307,"updates":860,"productive":2167,"ratio":1.1,"activeDays":19,"estHours":92,"dailyRate":217.9,"weekTotals":{"W1":1387,"W2":931,"W3":1216,"W4":607}},
-  {"name":"Carlos Villanueva","role":"Team Member","isBench":false,"total":3187,"reads":1475,"creates":1104,"updates":595,"productive":1699,"ratio":1.15,"activeDays":19,"estHours":70.8,"dailyRate":167.7,"weekTotals":{"W1":867,"W2":547,"W3":890,"W4":883}},
-  {"name":"Chris Dimaculangan","role":"Department Head","isBench":false,"total":1135,"reads":810,"creates":168,"updates":150,"productive":318,"ratio":0.39,"activeDays":22,"estHours":25.2,"dailyRate":51.6,"weekTotals":{"W1":213,"W2":307,"W3":393,"W4":222}},
-  {"name":"David Delgado","role":"Team Member","isBench":false,"total":7804,"reads":3686,"creates":2160,"updates":1907,"productive":4067,"ratio":1.1,"activeDays":20,"estHours":173.4,"dailyRate":390.2,"weekTotals":{"W1":2085,"W2":1700,"W3":1944,"W4":2075}},
-  {"name":"Emmanuel Reblora","role":"Team Member","isBench":false,"total":7930,"reads":4120,"creates":2320,"updates":1458,"productive":3778,"ratio":0.92,"activeDays":22,"estHours":176.2,"dailyRate":360.5,"weekTotals":{"W1":1863,"W2":2006,"W3":1648,"W4":2413}},
-  {"name":"Juan David Valencia","role":"Team Member","isBench":false,"total":1557,"reads":1172,"creates":253,"updates":131,"productive":384,"ratio":0.33,"activeDays":20,"estHours":34.6,"dailyRate":77.9,"weekTotals":{"W1":312,"W2":346,"W3":596,"W4":303}},
-  {"name":"Kneil De Jesus","role":"Team Member","isBench":false,"total":2612,"reads":1532,"creates":633,"updates":430,"productive":1063,"ratio":0.69,"activeDays":19,"estHours":58,"dailyRate":137.5,"weekTotals":{"W1":469,"W2":502,"W3":925,"W4":716}},
-  {"name":"Mary Facio Rubio","role":"Team Member","isBench":false,"total":7732,"reads":4041,"creates":2124,"updates":1527,"productive":3651,"ratio":0.9,"activeDays":28,"estHours":171.8,"dailyRate":276.1,"weekTotals":{"W5":14,"W1":2116,"W2":1709,"W3":2114,"W4":1779}},
-  {"name":"Raphael Rivera","role":"Team Member","isBench":false,"total":7181,"reads":3855,"creates":2187,"updates":1122,"productive":3309,"ratio":0.86,"activeDays":22,"estHours":159.6,"dailyRate":326.4,"weekTotals":{"W5":67,"W1":1278,"W2":1770,"W3":2161,"W4":1905}},
-  {"name":"Sheena Lalunio","role":"Team Member","isBench":false,"total":10520,"reads":4813,"creates":3776,"updates":1674,"productive":5450,"ratio":1.13,"activeDays":21,"estHours":233.8,"dailyRate":501,"weekTotals":{"W1":2169,"W2":2274,"W3":2813,"W4":3264}},
-  {"name":"Daniel Davila","role":"Team Member","isBench":false,"total":6563,"reads":2919,"creates":2127,"updates":1497,"productive":3624,"ratio":1.24,"activeDays":21,"estHours":145.8,"dailyRate":312.5,"weekTotals":{"W1":1526,"W2":1009,"W3":1832,"W4":2196}},
-  {"name":"Hacey Bonus","role":"Team Member","isBench":false,"total":3542,"reads":2203,"creates":1022,"updates":289,"productive":1311,"ratio":0.6,"activeDays":20,"estHours":78.7,"dailyRate":177.1,"weekTotals":{"W1":655,"W2":828,"W3":992,"W4":1067}},
-  {"name":"Yane Vacca","role":"#2 / Second in Command","isBench":false,"total":3248,"reads":2016,"creates":658,"updates":412,"productive":1070,"ratio":0.53,"activeDays":19,"estHours":72.2,"dailyRate":170.9,"weekTotals":{"W1":547,"W2":784,"W3":1083,"W4":834}}
+const TEAM = [
+  {key:'ashley',name:'Ashley Sacramento',role:'Claims Coordinator',isBench:true},
+  {key:'carlos',name:'Carlos Villanueva',role:'Claims Coordinator'},
+  {key:'chris',name:'Chris Dimaculangan',role:'Head of Claims Management'},
+  {key:'david',name:'David Delgado',role:'Claims Analyst'},
+  {key:'emmanuel',name:'Emmanuel Reblora',role:'Claims Analyst'},
+  {key:'juan',name:'Juan David Valencia',role:'Senior Claims Analyst'},
+  {key:'kneil',name:'Kneil De Jesus',role:'Senior Claims Analyst'},
+  {key:'mary',name:'Mary Facio Rubio',role:'Claims Analyst'},
+  {key:'raphael',name:'Raphael Rivera',role:'Claims Analyst'},
+  {key:'sheena',name:'Sheena Lalunio',role:'Claims Analyst'},
+  {key:'daniel',name:'Daniel Davila',role:'Claims Analyst'},
+  {key:'hacey',name:'Hacey Bonus',role:'Claims Coordinator'},
+  {key:'yane',name:'Yane Vacca',role:'Senior Claims Analyst'},
+  {key:'gerald',name:'Gerald Banaag',role:'Claims Analyst'}
 ];
 
-var MAR_DATA=[
-  {"name":"Ashley Sacramento","role":"Benchmark (5/10)","isBench":true,"total":3059,"reads":1398,"creates":964,"updates":694,"productive":1658,"ratio":1.19,"activeDays":19,"estHours":68,"dailyRate":161,"weekTotals":{"W1":658,"W2":218,"W3":755,"W4":886,"W5":542}},
-  {"name":"Carlos Villanueva","role":"Team Member","isBench":false,"total":2315,"reads":992,"creates":918,"updates":386,"productive":1304,"ratio":1.31,"activeDays":17,"estHours":51.4,"dailyRate":136.2,"weekTotals":{"W1":487,"W2":865,"W3":403,"W4":106,"W5":454}},
-  {"name":"Chris Dimaculangan","role":"Department Head","isBench":false,"total":779,"reads":548,"creates":152,"updates":74,"productive":226,"ratio":0.41,"activeDays":21,"estHours":17.3,"dailyRate":37.1,"weekTotals":{"W1":205,"W2":188,"W3":142,"W4":196,"W5":48}},
-  {"name":"David Delgado","role":"Team Member","isBench":false,"total":5615,"reads":2919,"creates":1347,"updates":1325,"productive":2672,"ratio":0.92,"activeDays":19,"estHours":124.8,"dailyRate":295.5,"weekTotals":{"W1":1410,"W2":923,"W3":1797,"W4":1485}},
-  {"name":"Emmanuel Reblora","role":"Team Member","isBench":false,"total":7613,"reads":3681,"creates":2428,"updates":1401,"productive":3829,"ratio":1.04,"activeDays":21,"estHours":169.2,"dailyRate":362.5,"weekTotals":{"W1":2049,"W2":1245,"W3":1739,"W4":1670,"W5":910}},
-  {"name":"Juan David Valencia","role":"Team Member","isBench":false,"total":1253,"reads":890,"creates":248,"updates":114,"productive":362,"ratio":0.41,"activeDays":20,"estHours":27.8,"dailyRate":62.7,"weekTotals":{"W1":347,"W2":218,"W3":316,"W4":235,"W5":137}},
-  {"name":"Kneil De Jesus","role":"Team Member","isBench":false,"total":2192,"reads":1198,"creates":597,"updates":387,"productive":984,"ratio":0.82,"activeDays":21,"estHours":48.7,"dailyRate":104.4,"weekTotals":{"W1":673,"W2":461,"W3":353,"W4":550,"W5":155}},
-  {"name":"Mary Facio Rubio","role":"Team Member","isBench":false,"total":8461,"reads":4692,"creates":2305,"updates":1432,"productive":3737,"ratio":0.8,"activeDays":28,"estHours":188,"dailyRate":302.2,"weekTotals":{"W4":2244,"W1":1913,"W2":1824,"W3":1278,"W5":1202}},
-  {"name":"Raphael Rivera","role":"Team Member","isBench":false,"total":6951,"reads":3940,"creates":1978,"updates":1012,"productive":2990,"ratio":0.76,"activeDays":23,"estHours":154.5,"dailyRate":302.2,"weekTotals":{"W4":1332,"W1":1638,"W2":1426,"W3":1809,"W5":746}},
-  {"name":"Sheena Lalunio","role":"Team Member","isBench":false,"total":9231,"reads":4531,"creates":3081,"updates":1557,"productive":4638,"ratio":1.02,"activeDays":23,"estHours":205.1,"dailyRate":401.3,"weekTotals":{"W1":2239,"W2":2117,"W3":2092,"W4":1918,"W5":865}},
-  {"name":"Daniel Davila","role":"Team Member","isBench":false,"total":6837,"reads":2903,"creates":2299,"updates":1632,"productive":3931,"ratio":1.35,"activeDays":25,"estHours":151.9,"dailyRate":273.5,"weekTotals":{"W4":1791,"W1":1631,"W2":1413,"W3":1451,"W5":551}},
-  {"name":"Hacey Bonus","role":"Team Member","isBench":false,"total":4389,"reads":2703,"creates":1232,"updates":415,"productive":1647,"ratio":0.61,"activeDays":23,"estHours":97.5,"dailyRate":190.8,"weekTotals":{"W1":936,"W2":693,"W3":905,"W4":935,"W5":920}},
-  {"name":"Yane Vacca","role":"#2 / Second in Command","isBench":false,"total":3013,"reads":2069,"creates":536,"updates":303,"productive":839,"ratio":0.41,"activeDays":18,"estHours":67,"dailyRate":167.4,"weekTotals":{"W1":368,"W2":999,"W3":588,"W4":543,"W5":515}}
+const WEEKS_IN = {jan:5,feb:4,mar:5,apr:5};
+
+const DATA = {
+  jan: {
+    ashley:{total:4551,reads:2311,creates:1282,updates:943,productive:2225,ratio:0.96,activeDays:25,estHours:101.1,dailyRate:182,weekTotals:{W1:955,W2:869,W3:1216,W4:1191,W5:320}},
+    carlos:{total:2848,reads:1462,creates:921,updates:443,productive:1364,ratio:0.93,activeDays:24,estHours:63.3,dailyRate:118.7,weekTotals:{W1:395,W2:539,W3:920,W4:593,W5:401}},
+    chris:{total:1412,reads:985,creates:236,updates:188,productive:424,ratio:0.43,activeDays:25,estHours:31.4,dailyRate:56.5,weekTotals:{W1:391,W2:346,W3:383,W4:256,W5:36}},
+    david:{total:8029,reads:3696,creates:2352,updates:1947,productive:4299,ratio:1.16,activeDays:21,estHours:178.4,dailyRate:382.3,weekTotals:{W1:1342,W2:2347,W3:1947,W4:1678,W5:715}},
+    emmanuel:{total:7436,reads:3460,creates:2503,updates:1438,productive:3941,ratio:1.14,activeDays:25,estHours:165.2,dailyRate:297.4,weekTotals:{W1:1513,W2:1813,W3:1930,W4:1506,W5:674}},
+    juan:{total:1570,reads:1203,creates:265,updates:95,productive:360,ratio:0.3,activeDays:24,estHours:34.9,dailyRate:65.4,weekTotals:{W1:181,W2:396,W3:370,W4:483,W5:140}},
+    kneil:{total:1396,reads:875,creates:396,updates:112,productive:508,ratio:0.58,activeDays:24,estHours:31,dailyRate:58.2,weekTotals:{W1:210,W2:319,W3:470,W4:303,W5:94}},
+    mary:{total:9036,reads:4768,creates:2232,updates:1990,productive:4222,ratio:0.89,activeDays:29,estHours:200.8,dailyRate:311.6,weekTotals:{W1:1346,W2:2214,W3:2732,W4:2047,W5:697}},
+    raphael:{total:0,reads:0,creates:0,updates:0,productive:0,ratio:0,activeDays:0,estHours:0,dailyRate:0,weekTotals:{}},
+    sheena:{total:9894,reads:5003,creates:3240,updates:1546,productive:4786,ratio:0.96,activeDays:25,estHours:219.9,dailyRate:395.8,weekTotals:{W1:1764,W2:2542,W3:2519,W4:2098,W5:971}},
+    daniel:{total:6563,reads:2633,creates:2454,updates:1466,productive:3920,ratio:1.49,activeDays:24,estHours:145.8,dailyRate:273.5,weekTotals:{W1:1271,W2:1520,W3:1325,W4:1978,W5:469}},
+    hacey:{total:4433,reads:2662,creates:1351,updates:385,productive:1736,ratio:0.65,activeDays:24,estHours:98.5,dailyRate:184.7,weekTotals:{W1:536,W2:1210,W3:1309,W4:965,W5:413}},
+    yane:{total:2354,reads:1434,creates:534,updates:268,productive:802,ratio:0.56,activeDays:25,estHours:52.3,dailyRate:94.2,weekTotals:{W1:410,W2:614,W3:529,W4:571,W5:230}},
+    gerald:{total:7347,reads:2991,creates:3071,updates:1256,productive:4327,ratio:1.45,activeDays:26,estHours:163.3,dailyRate:282.6,weekTotals:{W1:1519,W2:1519,W3:1768,W4:1732,W5:809}}
+  },
+  feb: {
+    ashley:{total:4141,reads:1962,creates:1307,updates:860,productive:2167,ratio:1.1,activeDays:19,estHours:92,dailyRate:217.9,weekTotals:{W1:1387,W2:931,W3:1216,W4:607}},
+    carlos:{total:3187,reads:1475,creates:1104,updates:595,productive:1699,ratio:1.15,activeDays:19,estHours:70.8,dailyRate:167.7,weekTotals:{W1:867,W2:547,W3:890,W4:883}},
+    chris:{total:1135,reads:810,creates:168,updates:150,productive:318,ratio:0.39,activeDays:22,estHours:25.2,dailyRate:51.6,weekTotals:{W1:213,W2:307,W3:393,W4:222}},
+    david:{total:7804,reads:3686,creates:2160,updates:1907,productive:4067,ratio:1.1,activeDays:20,estHours:173.4,dailyRate:390.2,weekTotals:{W1:2085,W2:1700,W3:1944,W4:2075}},
+    emmanuel:{total:7930,reads:4120,creates:2320,updates:1458,productive:3778,ratio:0.92,activeDays:22,estHours:176.2,dailyRate:360.5,weekTotals:{W1:1863,W2:2006,W3:1648,W4:2413}},
+    juan:{total:1557,reads:1172,creates:253,updates:131,productive:384,ratio:0.33,activeDays:20,estHours:34.6,dailyRate:77.9,weekTotals:{W1:312,W2:346,W3:596,W4:303}},
+    kneil:{total:2612,reads:1532,creates:633,updates:430,productive:1063,ratio:0.69,activeDays:19,estHours:58,dailyRate:137.5,weekTotals:{W1:469,W2:502,W3:925,W4:716}},
+    mary:{total:7732,reads:4041,creates:2124,updates:1527,productive:3651,ratio:0.9,activeDays:28,estHours:171.8,dailyRate:276.1,weekTotals:{W5:14,W1:2116,W2:1709,W3:2114,W4:1779}},
+    raphael:{total:7181,reads:3855,creates:2187,updates:1122,productive:3309,ratio:0.86,activeDays:22,estHours:159.6,dailyRate:326.4,weekTotals:{W5:67,W1:1278,W2:1770,W3:2161,W4:1905}},
+    sheena:{total:10520,reads:4813,creates:3776,updates:1674,productive:5450,ratio:1.13,activeDays:21,estHours:233.8,dailyRate:501,weekTotals:{W1:2169,W2:2274,W3:2813,W4:3264}},
+    daniel:{total:6563,reads:2919,creates:2127,updates:1497,productive:3624,ratio:1.24,activeDays:21,estHours:145.8,dailyRate:312.5,weekTotals:{W1:1526,W2:1009,W3:1832,W4:2196}},
+    hacey:{total:3542,reads:2203,creates:1022,updates:289,productive:1311,ratio:0.6,activeDays:20,estHours:78.7,dailyRate:177.1,weekTotals:{W1:655,W2:828,W3:992,W4:1067}},
+    yane:{total:3248,reads:2016,creates:658,updates:412,productive:1070,ratio:0.53,activeDays:19,estHours:72.2,dailyRate:170.9,weekTotals:{W1:547,W2:784,W3:1083,W4:834}},
+    gerald:{total:8474,reads:3406,creates:3560,updates:1460,productive:5020,ratio:1.47,activeDays:24,estHours:188.3,dailyRate:353.1,weekTotals:{W1:2035,W2:2140,W3:2309,W4:1990}}
+  },
+  mar: {
+    ashley:{total:3059,reads:1398,creates:964,updates:694,productive:1658,ratio:1.19,activeDays:19,estHours:68,dailyRate:161,weekTotals:{W1:658,W2:218,W3:755,W4:886,W5:542}},
+    carlos:{total:2315,reads:992,creates:918,updates:386,productive:1304,ratio:1.31,activeDays:17,estHours:51.4,dailyRate:136.2,weekTotals:{W1:487,W2:865,W3:403,W4:106,W5:454}},
+    chris:{total:779,reads:548,creates:152,updates:74,productive:226,ratio:0.41,activeDays:21,estHours:17.3,dailyRate:37.1,weekTotals:{W1:205,W2:188,W3:142,W4:196,W5:48}},
+    david:{total:5615,reads:2919,creates:1347,updates:1325,productive:2672,ratio:0.92,activeDays:19,estHours:124.8,dailyRate:295.5,weekTotals:{W1:1410,W2:923,W3:1797,W4:1485}},
+    emmanuel:{total:7613,reads:3681,creates:2428,updates:1401,productive:3829,ratio:1.04,activeDays:21,estHours:169.2,dailyRate:362.5,weekTotals:{W1:2049,W2:1245,W3:1739,W4:1670,W5:910}},
+    juan:{total:1253,reads:890,creates:248,updates:114,productive:362,ratio:0.41,activeDays:20,estHours:27.8,dailyRate:62.7,weekTotals:{W1:347,W2:218,W3:316,W4:235,W5:137}},
+    kneil:{total:2192,reads:1198,creates:597,updates:387,productive:984,ratio:0.82,activeDays:21,estHours:48.7,dailyRate:104.4,weekTotals:{W1:673,W2:461,W3:353,W4:550,W5:155}},
+    mary:{total:8461,reads:4692,creates:2305,updates:1432,productive:3737,ratio:0.8,activeDays:28,estHours:188,dailyRate:302.2,weekTotals:{W4:2244,W1:1913,W2:1824,W3:1278,W5:1202}},
+    raphael:{total:6951,reads:3940,creates:1978,updates:1012,productive:2990,ratio:0.76,activeDays:23,estHours:154.5,dailyRate:302.2,weekTotals:{W4:1332,W1:1638,W2:1426,W3:1809,W5:746}},
+    sheena:{total:9231,reads:4531,creates:3081,updates:1557,productive:4638,ratio:1.02,activeDays:23,estHours:205.1,dailyRate:401.3,weekTotals:{W1:2239,W2:2117,W3:2092,W4:1918,W5:865}},
+    daniel:{total:6837,reads:2903,creates:2299,updates:1632,productive:3931,ratio:1.35,activeDays:25,estHours:151.9,dailyRate:273.5,weekTotals:{W4:1791,W1:1631,W2:1413,W3:1451,W5:551}},
+    hacey:{total:4389,reads:2703,creates:1232,updates:415,productive:1647,ratio:0.61,activeDays:23,estHours:97.5,dailyRate:190.8,weekTotals:{W1:936,W2:693,W3:905,W4:935,W5:920}},
+    yane:{total:3013,reads:2069,creates:536,updates:303,productive:839,ratio:0.41,activeDays:18,estHours:67,dailyRate:167.4,weekTotals:{W1:368,W2:999,W3:588,W4:543,W5:515}},
+    gerald:{total:7441,reads:2997,creates:3107,updates:1297,productive:4404,ratio:1.47,activeDays:27,estHours:165.4,dailyRate:275.6,weekTotals:{W1:2082,W2:1668,W3:1444,W4:1462,W5:785}}
+  },
+  apr: {
+    ashley:{total:4066,reads:1607,creates:1498,updates:946,productive:2444,ratio:1.52,activeDays:21,estHours:90.4,dailyRate:193.6,weekTotals:{}},
+    carlos:{total:2691,reads:968,creates:1161,updates:546,productive:1707,ratio:1.76,activeDays:16,estHours:59.4,dailyRate:168.2,weekTotals:{W1:291,W2:224,W3:497,W4:858,W5:805}},
+    chris:{total:1261,reads:953,creates:180,updates:123,productive:303,ratio:0.32,activeDays:19,estHours:27.9,dailyRate:66.4,weekTotals:{W1:5,W2:494,W3:443,W4:36,W5:278}},
+    david:{total:5244,reads:2590,creates:1529,updates:1085,productive:2614,ratio:1.01,activeDays:17,estHours:115.6,dailyRate:308.5,weekTotals:{W1:0,W2:1429,W3:1331,W4:1605,W5:839}},
+    emmanuel:{total:6937,reads:3333,creates:2210,updates:1370,productive:3580,ratio:1.07,activeDays:19,estHours:154.2,dailyRate:365.1,weekTotals:{}},
+    juan:{total:1186,reads:859,creates:249,updates:73,productive:322,ratio:0.37,activeDays:16,estHours:26.2,dailyRate:74.1,weekTotals:{W1:68,W2:325,W3:48,W4:513,W5:227}},
+    kneil:{total:1279,reads:774,creates:346,updates:157,productive:503,ratio:0.65,activeDays:16,estHours:28.4,dailyRate:79.9,weekTotals:{W1:9,W2:389,W3:409,W4:293,W5:177}},
+    mary:{total:7889,reads:4485,creates:2047,updates:1326,productive:3373,ratio:0.75,activeDays:22,estHours:105.2,dailyRate:358.6,weekTotals:{W1:0,W2:0,W3:1534,W4:1747,W5:1631}},
+    raphael:{total:5860,reads:3399,creates:1611,updates:822,productive:2433,ratio:0.72,activeDays:18,estHours:124.8,dailyRate:325.6,weekTotals:{W1:920,W2:1482,W3:1518,W4:0,W5:1912}},
+    sheena:{total:4672,reads:2393,creates:1293,updates:976,productive:2269,ratio:0.95,activeDays:24,estHours:103.8,dailyRate:194.7,weekTotals:{}},
+    daniel:{total:5758,reads:2316,creates:2147,updates:1285,productive:3432,ratio:1.48,activeDays:19,estHours:124.3,dailyRate:303.1,weekTotals:{W1:382,W2:1771,W3:1093,W4:1125,W5:1377}},
+    hacey:{total:4041,reads:2201,creates:1367,updates:429,productive:1796,ratio:0.82,activeDays:20,estHours:85.5,dailyRate:202.1,weekTotals:{W1:618,W2:521,W3:637,W4:1032,W5:1189}},
+    yane:{total:2079,reads:1408,creates:421,updates:239,productive:660,ratio:0.47,activeDays:16,estHours:46,dailyRate:129.9,weekTotals:{W1:198,W2:755,W3:542,W4:0,W5:573}},
+    gerald:{total:5733,reads:2588,creates:2180,updates:935,productive:3115,ratio:1.2,activeDays:22,estHours:127.4,dailyRate:260.6,weekTotals:{W1:1025,W2:1513,W3:1466,W4:1382,W5:347}}
+  }
+};
+
+// Build Q1 combined (Jan+Feb+Mar)
+(function buildQ1() {
+  const q1 = {};
+  TEAM.forEach(t => {
+    const j = DATA.jan[t.key], f = DATA.feb[t.key], m = DATA.mar[t.key];
+    const total = j.total + f.total + m.total;
+    const reads = j.reads + f.reads + m.reads;
+    const creates = j.creates + f.creates + m.creates;
+    const updates = j.updates + f.updates + m.updates;
+    const productive = j.productive + f.productive + m.productive;
+    const estHours = +(j.estHours + f.estHours + m.estHours).toFixed(1);
+    const activeDays = j.activeDays + f.activeDays + m.activeDays;
+    const ratio = reads > 0 ? +(productive / reads).toFixed(2) : 0;
+    const dailyRate = activeDays > 0 ? +(total / activeDays).toFixed(1) : 0;
+    q1[t.key] = {total,reads,creates,updates,productive,ratio,activeDays,estHours,dailyRate,
+      weekTotals:{Jan:j.total,Feb:f.total,Mar:m.total}};
+  });
+  DATA.q1 = q1;
+})();
+
+const TABS = [
+  {id:'jan',label:'Jan'},
+  {id:'feb',label:'Feb'},
+  {id:'mar',label:'Mar'},
+  {id:'apr',label:'Apr'},
+  {id:'q1',label:'Q1 (Jan-Mar)'}
 ];
 
-var APR_DATA=[{"name":"Mary Facio Rubio","role":"Team Member","score":9,"isBench":false,"total":7889,"reads":4485,"creates":2047,"updates":1326,"productive":3373,"ratio":0.75,"activeDays":22,"estHours":105.2,"avgDailyHrs":4.8,"dailyRate":358.6,"flags":["green:Highest volume tier (7,889 actions)","green:Strong attendance (22 active days)","green:Exceptional create volume (2,047)"],"summary":"The team's most active member this month with 7,889 total CRM actions across 22 active days. Mary averages 359 actions/day with a read-heavy pattern (0.75 ratio) that's offset by sheer volume -- 2,047 creates and 1,326 updates is massive output. Her weeks 3-4 show sustained 300-500+ action days with no drop-off. Working weekends (Apr 19, 20, 25) shows extraordinary dedication. The volume alone puts her at the top, but the read ratio suggests she could be more targeted in her CRM navigation.","weekTotals":{"W1 (Apr 1-5)":0,"W2 (Apr 6-12)":0,"W3 (Apr 13-19)":1534,"W4 (Apr 20-26)":1747,"W5 (Apr 27-30)":1631}},{"name":"Emmanuel Reblora","role":"Team Member","score":9,"isBench":false,"total":6937,"reads":3333,"creates":2210,"updates":1370,"productive":3580,"ratio":1.07,"activeDays":19,"estHours":154.2,"avgDailyHrs":8.1,"dailyRate":365.1,"flags":["green:Highest volume tier (6,937 actions)","green:Good productive ratio (1.07x)","green:High monthly hours (154h est.)","green:Exceptional create volume (2,210)"],"summary":"Second-highest volume on the team at 6,937 actions over 19 active days (365/day average). His productive ratio of 1.07 means he's acting on nearly everything he opens. 2,210 creates and 1,370 updates represent massive throughput -- he's not just viewing claims, he's moving them. Slightly fewer active days than top peers (19 vs 21-24) but his daily output is among the highest. A powerhouse performer who combines volume with efficiency.","weekTotals":{}},{"name":"Daniel Davila","role":"Team Member","score":9,"isBench":false,"total":5758,"reads":2316,"creates":2147,"updates":1285,"productive":3432,"ratio":1.48,"activeDays":19,"estHours":124.3,"avgDailyHrs":6.5,"dailyRate":303.1,"flags":["green:High volume (5,758 actions)","green:Good productive ratio (1.48x)","green:High monthly hours (124h est.)","green:Exceptional create volume (2,147)"],"summary":"A workload monster at 5,758 actions with the month's best productive ratio among high-volume users (1.48x). His 2,147 creates are second only to Emmanuel, and 1,285 updates lead the team. 19 active days with massive daily output (303/day). One near-zero day (Apr 17: 2 actions) and one light day (Apr 24: 14 actions) are the only blemishes. When Daniel works, he's one of the most productive people on the team.","weekTotals":{"W1 (Apr 1-5)":382,"W2 (Apr 6-12)":1771,"W3 (Apr 13-19)":1093,"W4 (Apr 20-26)":1125,"W5 (Apr 27-30)":1377}},{"name":"Raphael Rivera","role":"Team Member","score":7,"isBench":false,"total":5860,"reads":3399,"creates":1611,"updates":822,"productive":2433,"ratio":0.72,"activeDays":18,"estHours":124.8,"avgDailyHrs":6.9,"dailyRate":325.6,"flags":["green:High volume (5,860 actions)","green:High monthly hours (125h est.)","green:Strong create volume (1,611)"],"summary":"Consistently one of the top performers with 5,860 actions across 18 active days. His 326 actions/day average is strong, and the byDay data shows he works weekends occasionally (Apr 12). Two full weeks missing mid-month (Apr 18-26) suggests PTO or assignment changes, but his production in the weeks he IS working is exceptional -- multiple 400+ action days. Creates (1,611) and updates (822) are both strong.","weekTotals":{"W1 (Apr 1-5)":920,"W2 (Apr 6-12)":1482,"W3 (Apr 13-19)":1518,"W4 (Apr 20-26)":0,"W5 (Apr 27-30)":1912}},{"name":"David Delgado","role":"Team Member","score":7,"isBench":false,"total":5244,"reads":2590,"creates":1529,"updates":1085,"productive":2614,"ratio":1.01,"activeDays":17,"estHours":115.6,"avgDailyHrs":6.8,"dailyRate":308.5,"flags":["green:High volume (5,244 actions)","green:Good productive ratio (1.01x)","green:Strong create volume (1,529)"],"summary":"Strong 5,244 actions across 17 active days (308/day). Excellent productive ratio (1.01x) -- balanced between reading and acting. No activity in Week 1 (Apr 1-5) is notable, but from Apr 6 onward he's one of the most consistent producers. 1,529 creates and 1,085 updates show he's actively processing claims. One light day (Apr 18: 35 actions) but otherwise very steady 270-420 action days.","weekTotals":{"W1 (Apr 1-5)":0,"W2 (Apr 6-12)":1429,"W3 (Apr 13-19)":1331,"W4 (Apr 20-26)":1605,"W5 (Apr 27-30)":839}},{"name":"Carlos Villanueva","role":"Team Member","score":7,"isBench":false,"total":2691,"reads":968,"creates":1161,"updates":546,"productive":1707,"ratio":1.76,"activeDays":16,"estHours":59.4,"avgDailyHrs":3.7,"dailyRate":168.2,"flags":["green:Excellent productive ratio (1.76x)","yellow:Below-average attendance (16 days)","yellow:Below-average hours (59h est.)","green:Strong create volume (1,161)"],"summary":"Excellent efficiency at 2,691 actions with the team's best productive ratio (1.76x). His 1,161 creates and 546 updates far outpace his reads (968). Works 16 active days but makes each day count -- averaging 168 actions/day with minimal wasted reads. Heavy days (342 on Apr 22, 291 on Apr 28) show burst capability. Creates dominate his workflow suggesting document/estimate processing. Strong performer despite fewer total actions.","weekTotals":{"W1 (Apr 1-5)":291,"W2 (Apr 6-12)":224,"W3 (Apr 13-19)":497,"W4 (Apr 20-26)":858,"W5 (Apr 27-30)":805}},{"name":"Sheena Lalunio","role":"Team Member","score":6,"isBench":false,"total":4672,"reads":2393,"creates":1293,"updates":976,"productive":2269,"ratio":0.95,"activeDays":24,"estHours":103.8,"avgDailyHrs":4.3,"dailyRate":194.7,"flags":["green:High volume (4,672 actions)","green:Strong attendance (24 active days)","green:Strong create volume (1,293)"],"summary":"Good volume at 4,672 actions and the most active days on the team (24). Present nearly every working day, including weekends. Productive ratio of 0.95x is solid. 1,293 creates and 976 updates across 24 days shows consistent daily output. Her daily average (195/day) is moderate -- she's working more days at a steady pace rather than having huge burst days. Dependable and consistent.","weekTotals":{}},{"name":"Hacey Bonus","role":"Team Member","score":6,"isBench":false,"total":4041,"reads":2201,"creates":1367,"updates":429,"productive":1796,"ratio":0.82,"activeDays":20,"estHours":85.5,"avgDailyHrs":4.3,"dailyRate":202.1,"flags":["green:High volume (4,041 actions)","green:Strong attendance (20 active days)","green:Strong create volume (1,367)"],"summary":"4,041 actions across 20 active days. Strong first day (600 actions on Apr 1) followed by an inconsistent pattern -- some days very light (18 on Apr 2, 39 on Apr 9). Creates (1,367) are good but updates (429) are lower relative to volume. Productive ratio (0.81x) is adequate. The inconsistency day-to-day is the main concern: ranging from 1 action (Apr 18) to 600 (Apr 1). Needs more steady daily engagement.","weekTotals":{"W1 (Apr 1-5)":618,"W2 (Apr 6-12)":521,"W3 (Apr 13-19)":637,"W4 (Apr 20-26)":1032,"W5 (Apr 27-30)":1189}},{"name":"Ashley Sacramento","role":"Benchmark (5/10)","score":5,"isBench":true,"total":4066,"reads":1607,"creates":1498,"updates":946,"productive":2444,"ratio":1.52,"activeDays":21,"estHours":90.4,"avgDailyHrs":4.3,"dailyRate":193.6,"flags":["green:High volume (4,066 actions)","green:Excellent productive ratio (1.52x)","green:Strong attendance (21 active days)","green:Strong create volume (1,498)"],"summary":"The benchmark at 5/10. 4,066 actions over 21 active days (194/day). Strong productive ratio (1.52x) -- she creates/updates more than she reads. 1,498 creates and 946 updates show solid output. 21 active days is good attendance. This is what 'meeting expectations' looks like: consistent presence, good efficiency, meaningful daily output.","weekTotals":{}},{"name":"Yane Vacca","role":"#2 / Second in Command","score":4,"isBench":false,"total":2079,"reads":1408,"creates":421,"updates":239,"productive":660,"ratio":0.47,"activeDays":16,"estHours":46,"avgDailyHrs":2.9,"dailyRate":129.9,"flags":["red:Very low productive ratio (0.47x)","yellow:Below-average attendance (16 days)","red:Very low monthly hours (46h est.)"],"summary":"As #2/Second in Command, 2,079 actions over 16 active days. Productive ratio (0.47x) is very read-heavy -- she's viewing far more than she's acting on. 1,408 reads vs only 421 creates and 239 updates. This could indicate a supervisory/review role, but the low productive output is concerning for the #2 position. Active days (16) are below average. Missing full weeks (Apr 18-26) impacts overall presence. Needs context on whether her value comes from off-CRM management work.","weekTotals":{"W1 (Apr 1-5)":198,"W2 (Apr 6-12)":755,"W3 (Apr 13-19)":542,"W4 (Apr 20-26)":0,"W5 (Apr 27-30)":573}},{"name":"Kneil De Jesus","role":"Team Member","score":3,"isBench":false,"total":1279,"reads":774,"creates":346,"updates":157,"productive":503,"ratio":0.65,"activeDays":16,"estHours":28.4,"avgDailyHrs":1.8,"dailyRate":79.9,"flags":["yellow:Low volume (1,279 actions)","yellow:Read-heavy ratio (0.65x)","yellow:Below-average attendance (16 days)","red:Very low monthly hours (28h est.)"],"summary":"1,279 actions across 16 active days (80/day average). Missing 6 working days in the month is significant. Productive ratio (0.65x) is read-leaning. Days he works show moderate output (57-112 actions/day) but nothing exceptional. Creates (346) are reasonable for his days worked. The main issues are attendance (16/22 days) and daily volume that's well below team average even when present.","weekTotals":{"W1 (Apr 1-5)":9,"W2 (Apr 6-12)":389,"W3 (Apr 13-19)":409,"W4 (Apr 20-26)":293,"W5 (Apr 27-30)":177}},{"name":"Chris Dimaculangan","role":"Department Head","score":3,"isBench":false,"total":1261,"reads":953,"creates":180,"updates":123,"productive":303,"ratio":0.32,"activeDays":19,"estHours":27.9,"avgDailyHrs":1.5,"dailyRate":66.4,"flags":["yellow:Low volume (1,261 actions)","red:Very low productive ratio (0.32x)","red:Very low monthly hours (28h est.)","red:Very few creates (180)"],"summary":"As Department Head, 1,261 actions over 19 active days. Very read-heavy (0.32 ratio) -- 953 reads vs only 180 creates and 123 updates. Several near-zero days (Apr 1: 2, Apr 3: 3, Apr 22: 1). His best days (Apr 14: 220, Apr 6: 189) show he CAN engage deeply. Active days (19) is decent attendance, but many of those days have minimal activity. As dept head, some work happens off-platform, but the CRM footprint is light.","weekTotals":{"W1 (Apr 1-5)":5,"W2 (Apr 6-12)":494,"W3 (Apr 13-19)":443,"W4 (Apr 20-26)":36,"W5 (Apr 27-30)":278}},{"name":"Juan David Valencia","role":"Team Member","score":2,"isBench":false,"total":1186,"reads":859,"creates":249,"updates":73,"productive":322,"ratio":0.37,"activeDays":16,"estHours":26.2,"avgDailyHrs":1.6,"dailyRate":74.1,"flags":["yellow:Low volume (1,186 actions)","red:Very low productive ratio (0.37x)","yellow:Below-average attendance (16 days)","red:Very low monthly hours (26h est.)"],"summary":"Lowest volume on the team at 1,186 actions over 16 active days (74/day). Very read-heavy (0.37 ratio) -- 859 reads vs only 249 creates and 73 updates. One outlier day (Apr 21: 210 actions) shows he CAN produce, but typical days are 50-80 actions. 73 updates for the entire month is concerning -- he's rarely modifying records. Present 16 days but consistently underproducing. Same attendance issue as Kneil but with even lower daily output.","weekTotals":{"W1 (Apr 1-5)":68,"W2 (Apr 6-12)":325,"W3 (Apr 13-19)":48,"W4 (Apr 20-26)":513,"W5 (Apr 27-30)":227}}];
+let activeTab = 'jan';
+let charts = [];
 
-// Compute avgHrsPerWeek for Feb/Mar data
-function computeAvgHrsPerWeek(data, numWeeks) {
-  data.forEach(function(p) {
-    var activeWeeks = 0;
-    if (p.weekTotals) {
-      Object.keys(p.weekTotals).forEach(function(k) { if (p.weekTotals[k] > 0) activeWeeks++; });
-    }
-    p.avgHrsPerWeek = activeWeeks > 0 ? Math.round(p.estHours / activeWeeks * 10) / 10 : 0;
-  });
+function getScore(d, benchTotal) {
+  if (benchTotal === 0) return 5;
+  let s = Math.round(d.total / benchTotal * 5);
+  return Math.max(1, Math.min(10, s));
 }
-computeAvgHrsPerWeek(FEB_DATA, 4);
-computeAvgHrsPerWeek(MAR_DATA, 5);
 
-// Compute for April
-APR_DATA.forEach(function(p) {
-  var activeWeeks = 0;
-  if (p.weekTotals) { Object.keys(p.weekTotals).forEach(function(k) { if (p.weekTotals[k] > 0) activeWeeks++; }); }
-  p.avgHrsPerWeek = activeWeeks > 0 ? Math.round(p.estHours / activeWeeks * 10) / 10 : 0;
-});
+function scoreClass(s) { return 's' + s; }
 
-// Build Combined data
-var COMBINED_DATA = [];
-var nameList = FEB_DATA.map(function(p) { return p.name; });
-nameList.forEach(function(name) {
-  var feb = FEB_DATA.find(function(p) { return p.name === name; });
-  var mar = MAR_DATA.find(function(p) { return p.name === name; });
-  var apr = APR_DATA.find(function(p) { return p.name === name; });
-  if (!feb || !mar || !apr) return;
-  var total = feb.total + mar.total + apr.total;
-  var reads = feb.reads + mar.reads + apr.reads;
-  var creates = feb.creates + mar.creates + apr.creates;
-  var updates = feb.updates + mar.updates + apr.updates;
-  var productive = creates + updates;
-  var ratio = reads > 0 ? Math.round(productive / reads * 100) / 100 : 0;
-  var activeDays = feb.activeDays + mar.activeDays + apr.activeDays;
-  var estHours = Math.round((feb.estHours + mar.estHours + apr.estHours) * 10) / 10;
-  var dailyRate = activeDays > 0 ? Math.round(total / activeDays * 10) / 10 : 0;
-  // Combined active weeks: count all weeks across 3 months with activity
-  var allWeeks = 0;
-  [feb, mar, apr].forEach(function(m) {
-    if (m.weekTotals) { Object.keys(m.weekTotals).forEach(function(k) { if (m.weekTotals[k] > 0) allWeeks++; }); }
+function scoreColor(s) {
+  const c = ['','#f87171','#fb7185','#fb923c','#fbbf24','#facc15','#86efac','#4ade80','#22d3ee','#6c8aff','#a78bfa'];
+  return c[s] || '#facc15';
+}
+
+function getWeeksLabel(tab) {
+  if (tab === 'q1') return ['Jan','Feb','Mar'];
+  const d = DATA[tab];
+  let maxW = 0;
+  TEAM.forEach(t => {
+    const wt = d[t.key].weekTotals;
+    Object.keys(wt).forEach(k => {
+      const n = parseInt(k.replace('W',''));
+      if (!isNaN(n) && n > maxW) maxW = n;
+    });
   });
-  var avgHrsPerWeek = allWeeks > 0 ? Math.round(estHours / allWeeks * 10) / 10 : 0;
-  COMBINED_DATA.push({
-    name: name, role: feb.role, isBench: feb.isBench,
-    total: total, reads: reads, creates: creates, updates: updates,
-    productive: productive, ratio: ratio, activeDays: activeDays,
-    estHours: estHours, dailyRate: dailyRate, avgHrsPerWeek: avgHrsPerWeek,
-    weekTotals: {}
-  });
-});
+  const labels = [];
+  for (let i = 1; i <= maxW; i++) labels.push('W' + i);
+  return labels;
+}
 
-// Chart instances tracker
-var chartInstances = {};
+function getWeekData(member, tab) {
+  const wt = DATA[tab][member.key].weekTotals;
+  if (tab === 'q1') return [DATA.jan[member.key].total, DATA.feb[member.key].total, DATA.mar[member.key].total];
+  const labels = getWeeksLabel(tab);
+  return labels.map(l => wt[l] || 0);
+}
 
-function destroyCharts(prefix) {
-  Object.keys(chartInstances).forEach(function(key) {
-    if (key.startsWith(prefix)) {
-      chartInstances[key].destroy();
-      delete chartInstances[key];
-    }
+function buildTabs() {
+  const bar = document.getElementById('tabBar');
+  bar.innerHTML = '';
+  TABS.forEach(t => {
+    const btn = document.createElement('button');
+    btn.className = 'tab-btn' + (t.id === activeTab ? ' active' : '');
+    btn.textContent = t.label;
+    btn.onclick = () => { activeTab = t.id; buildTabs(); render(); };
+    bar.appendChild(btn);
   });
 }
 
-function renderTab(tabId, data, monthLabel, workingDays, hasScores) {
-  var container = document.getElementById('tab-' + tabId);
-  var prefix = tabId + '_';
+function render() {
+  const data = DATA[activeTab];
+  const benchTotal = data.ashley.total;
 
-  // Build HTML
-  var html = '';
+  // Sort by total desc
+  const sorted = TEAM.slice().sort((a,b) => data[b.key].total - data[a.key].total);
 
-  // Score cards row
-  html += '<div class="scores-row" id="' + prefix + 'scoreCards"></div>';
-
-  // Charts
-  html += '<div class="chart-row"><div class="chart-box full"><h3>Monthly CRM Activity Volume - All Team (' + monthLabel + ')</h3><div class="chart-desc"><strong>Reads</strong> = opening/viewing a record (claim, contact, task). <strong>Creates</strong> = adding a new record (note, task, document, email, estimate). <strong>Updates</strong> = modifying an existing record (changing a claim stage, editing fields, updating status). Creates + Updates = productive actions.</div><canvas id="' + prefix + 'volumeChart" height="70"></canvas></div></div>';
-  html += '<div class="chart-row"><div class="chart-box"><h3>Productive/Read Ratio</h3><div class="chart-desc">How many productive actions (creates + updates) per read. Above 1.0 = acting more than browsing. Below 0.5 = mostly just viewing records without taking action.</div><canvas id="' + prefix + 'ratioChart"></canvas></div>';
-  html += '<div class="chart-box"><h3>Estimated Monthly Hours</h3><div class="chart-desc">Total hours estimated from CRM action volume using ~45 actions/hour calibration. Not a time clock &mdash; measures CRM engagement time only.</div><canvas id="' + prefix + 'hoursChart"></canvas></div></div>';
-  html += '<div class="chart-row"><div class="chart-box"><h3>Active Days (of ~' + workingDays + ' working days)</h3><div class="chart-desc">Number of days with at least 1 CRM action logged. Missing days may indicate PTO, field work, or disengagement.</div><canvas id="' + prefix + 'daysChart"></canvas></div>';
-  html += '<div class="chart-box"><h3>Daily Action Rate (avg/active day)</h3><div class="chart-desc">Average total actions per day they were active. Higher = more CRM throughput on working days.</div><canvas id="' + prefix + 'rateChart"></canvas></div></div>';
-  html += '<div class="chart-row"><div class="chart-box full"><h3>Avg Hours per Week per Rep</h3><div class="chart-desc">Estimated monthly hours divided by the number of weeks with activity. Shows weekly CRM workload per rep &mdash; 40h/wk = full-time equivalent.</div><canvas id="' + prefix + 'weeklyHrsChart"></canvas></div></div>';
-
-  // Individual assessments
-  html += '<div class="section-title">Individual Assessments</div>';
-  html += '<div class="chart-desc" style="margin-bottom:12px">Each card shows key metrics. <strong>Total Actions</strong> = all CRM events. <strong>Productive</strong> = creates + updates only. <strong>Prod/Read</strong> = ratio of productive to reads. <strong>Active Days</strong> = days with any CRM activity. <strong>Est. Hours</strong> = estimated CRM time. <strong>Actions/Day</strong> = avg actions on days worked. <strong>Avg Hrs/Wk</strong> = monthly hours / active weeks.</div>';
-  html += '<div id="' + prefix + 'personCards"></div>';
-
-  container.innerHTML = html;
-
-  // Populate score cards
-  var cardsEl = document.getElementById(prefix + 'scoreCards');
-  var sortedByTotal = data.slice().sort(function(a, b) { return b.total - a.total; });
-  sortedByTotal.forEach(function(p) {
-    if (hasScores && p.score !== undefined) {
-      cardsEl.innerHTML += '<div class="sc' + (p.isBench ? ' benchmark' : '') + '"><div class="name">' + p.name.split(' ')[0] + '</div><div class="role">' + p.role + '</div><div class="score s' + p.score + '">' + p.score + '<span class="slash">/10</span></div><div class="hrs">' + p.estHours + 'h &middot; ' + p.total.toLocaleString() + '</div></div>';
-    } else {
-      cardsEl.innerHTML += '<div class="sc' + (p.isBench ? ' benchmark' : '') + '"><div class="name">' + p.name.split(' ')[0] + '</div><div class="role">' + p.role + '</div><div class="hrs" style="margin-top:8px;font-size:11px;font-weight:600">' + p.estHours + 'h &middot; ' + p.total.toLocaleString() + '</div></div>';
-    }
+  // Score cards
+  const row = document.getElementById('scoreRow');
+  row.innerHTML = '';
+  sorted.forEach(t => {
+    const d = data[t.key];
+    const s = getScore(d, benchTotal);
+    const card = document.createElement('div');
+    card.className = 'score-card ' + scoreClass(s) + (t.isBench ? ' bench' : '');
+    card.innerHTML =
+      '<div class="score-circle">' + s + '</div>' +
+      '<div class="name">' + t.name + '</div>' +
+      '<div class="role">' + t.role + '</div>' +
+      '<div class="hours">' + d.estHours + 'h est.</div>' +
+      (t.isBench ? '<div class="bench-label">Benchmark</div>' : '');
+    row.appendChild(card);
   });
 
-  // Charts
-  var sorted = data.slice().sort(function(a, b) { return b.total - a.total; });
-  var names = sorted.map(function(p) { return p.name.split(' ').slice(0, 2).join(' '); });
-  var barC = sorted.map(function(p) { return p.isBench ? '#3b82f6' : (hasScores && p.score !== undefined) ? (p.score >= 8 ? '#22c55e' : p.score >= 7 ? '#84cc16' : p.score >= 5 ? '#eab308' : p.score >= 4 ? '#f97316' : '#ef4444') : '#0ea5e9'; });
+  // Destroy old charts
+  charts.forEach(c => c.destroy());
+  charts = [];
 
-  chartInstances[prefix + 'volume'] = new Chart(document.getElementById(prefix + 'volumeChart'), {
+  const names = sorted.map(t => {
+    const parts = t.name.split(' ');
+    return parts[0] + ' ' + parts[parts.length - 1][0] + '.';
+  });
+
+  const chartOpts = function(stacked) {
+    return {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: {
+        legend: { display: !!stacked, labels: { color: '#9ca3b8', font: { size: 11 } } },
+        title: { display: false }
+      },
+      scales: {
+        x: { stacked: !!stacked, ticks: { color: '#9ca3b8', font: { size: 10 }, maxRotation: 45 }, grid: { color: 'rgba(46,51,69,.5)' } },
+        y: { stacked: !!stacked, ticks: { color: '#9ca3b8', font: { size: 10 } }, grid: { color: 'rgba(46,51,69,.5)' } }
+      }
+    };
+  };
+
+  // 1. Volume stacked bar
+  charts.push(new Chart(document.getElementById('chartVolume'), {
     type: 'bar',
-    data: { labels: names, datasets: [
-      { label: 'Reads', data: sorted.map(function(p) { return p.reads; }), backgroundColor: '#cbd5e1' },
-      { label: 'Creates', data: sorted.map(function(p) { return p.creates; }), backgroundColor: '#22c55e' },
-      { label: 'Updates', data: sorted.map(function(p) { return p.updates; }), backgroundColor: '#3b82f6' }
-    ]},
-    options: { responsive: true, plugins: { legend: { position: 'top', labels: { boxWidth: 10, font: { size: 10 } } } }, scales: { x: { stacked: true, grid: { display: false }, ticks: { font: { size: 10 }, maxRotation: 45, minRotation: 25 } }, y: { stacked: true, beginAtZero: true, grid: { color: '#f1f5f9' } } } }
-  });
+    data: {
+      labels: names,
+      datasets: [
+        { label: 'Reads', data: sorted.map(t => data[t.key].reads), backgroundColor: 'rgba(108,138,255,.7)' },
+        { label: 'Creates', data: sorted.map(t => data[t.key].creates), backgroundColor: 'rgba(74,222,128,.7)' },
+        { label: 'Updates', data: sorted.map(t => data[t.key].updates), backgroundColor: 'rgba(250,204,21,.7)' }
+      ]
+    },
+    options: chartOpts(true)
+  }));
 
-  chartInstances[prefix + 'ratio'] = new Chart(document.getElementById(prefix + 'ratioChart'), {
+  // 2. Ratio
+  charts.push(new Chart(document.getElementById('chartRatio'), {
     type: 'bar',
-    data: { labels: names, datasets: [{ data: sorted.map(function(p) { return p.ratio; }), backgroundColor: barC, borderRadius: 4 }] },
-    options: { responsive: true, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false }, ticks: { font: { size: 9 }, maxRotation: 45, minRotation: 25 } }, y: { beginAtZero: true, grid: { color: '#f1f5f9' } } } }
-  });
+    data: {
+      labels: names,
+      datasets: [{ label: 'Ratio', data: sorted.map(t => data[t.key].ratio),
+        backgroundColor: sorted.map(t => data[t.key].ratio >= 1 ? 'rgba(74,222,128,.7)' : data[t.key].ratio >= 0.7 ? 'rgba(250,204,21,.7)' : 'rgba(248,113,113,.7)') }]
+    },
+    options: chartOpts(false)
+  }));
 
-  var hSorted = data.slice().sort(function(a, b) { return b.estHours - a.estHours; });
-  var hNames = hSorted.map(function(p) { return p.name.split(' ').slice(0, 2).join(' '); });
-  var hColors = hSorted.map(function(p) { return p.isBench ? '#3b82f6' : p.estHours >= 120 ? '#22c55e' : p.estHours >= 80 ? '#84cc16' : p.estHours >= 50 ? '#f59e0b' : '#ef4444'; });
-
-  chartInstances[prefix + 'hours'] = new Chart(document.getElementById(prefix + 'hoursChart'), {
+  // 3. Hours
+  charts.push(new Chart(document.getElementById('chartHours'), {
     type: 'bar',
-    data: { labels: hNames, datasets: [{ data: hSorted.map(function(p) { return p.estHours; }), backgroundColor: hColors, borderRadius: 4 }] },
-    options: { responsive: true, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false }, ticks: { font: { size: 9 }, maxRotation: 45, minRotation: 25 } }, y: { beginAtZero: true, grid: { color: '#f1f5f9' }, title: { display: true, text: 'Hours', font: { size: 10 } } } } }
-  });
+    data: {
+      labels: names,
+      datasets: [{ label: 'Est. Hours', data: sorted.map(t => data[t.key].estHours), backgroundColor: 'rgba(34,211,238,.6)' }]
+    },
+    options: chartOpts(false)
+  }));
 
-  var dSorted = data.slice().sort(function(a, b) { return b.activeDays - a.activeDays; });
-  var dNames = dSorted.map(function(p) { return p.name.split(' ').slice(0, 2).join(' '); });
-  var dColors = dSorted.map(function(p) { return p.isBench ? '#3b82f6' : p.activeDays >= 20 ? '#22c55e' : p.activeDays >= 17 ? '#84cc16' : p.activeDays >= 15 ? '#f59e0b' : '#ef4444'; });
-
-  chartInstances[prefix + 'days'] = new Chart(document.getElementById(prefix + 'daysChart'), {
+  // 4. Active days
+  charts.push(new Chart(document.getElementById('chartDays'), {
     type: 'bar',
-    data: { labels: dNames, datasets: [{ data: dSorted.map(function(p) { return p.activeDays; }), backgroundColor: dColors, borderRadius: 4 }] },
-    options: { responsive: true, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false }, ticks: { font: { size: 9 }, maxRotation: 45, minRotation: 25 } }, y: { beginAtZero: true, grid: { color: '#f1f5f9' } } } }
-  });
+    data: {
+      labels: names,
+      datasets: [{ label: 'Active Days', data: sorted.map(t => data[t.key].activeDays), backgroundColor: 'rgba(167,139,250,.6)' }]
+    },
+    options: chartOpts(false)
+  }));
 
-  var rSorted = data.slice().sort(function(a, b) { return b.dailyRate - a.dailyRate; });
-  var rNames = rSorted.map(function(p) { return p.name.split(' ').slice(0, 2).join(' '); });
-  var rColors = rSorted.map(function(p) { return p.isBench ? '#3b82f6' : p.dailyRate >= 300 ? '#22c55e' : p.dailyRate >= 200 ? '#84cc16' : p.dailyRate >= 100 ? '#f59e0b' : '#ef4444'; });
-
-  chartInstances[prefix + 'rate'] = new Chart(document.getElementById(prefix + 'rateChart'), {
+  // 5. Daily rate
+  charts.push(new Chart(document.getElementById('chartDaily'), {
     type: 'bar',
-    data: { labels: rNames, datasets: [{ data: rSorted.map(function(p) { return p.dailyRate; }), backgroundColor: rColors, borderRadius: 4 }] },
-    options: { responsive: true, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false }, ticks: { font: { size: 9 }, maxRotation: 45, minRotation: 25 } }, y: { beginAtZero: true, grid: { color: '#f1f5f9' }, title: { display: true, text: 'Actions/Day', font: { size: 10 } } } } }
-  });
+    data: {
+      labels: names,
+      datasets: [{ label: 'Daily Rate', data: sorted.map(t => data[t.key].dailyRate), backgroundColor: 'rgba(251,146,60,.6)' }]
+    },
+    options: chartOpts(false)
+  }));
 
-  var wSorted = data.slice().sort(function(a, b) { return b.avgHrsPerWeek - a.avgHrsPerWeek; });
-  var wNames = wSorted.map(function(p) { return p.name.split(' ').slice(0, 2).join(' '); });
-  var wColors = wSorted.map(function(p) { return p.isBench ? '#3b82f6' : p.avgHrsPerWeek >= 30 ? '#22c55e' : p.avgHrsPerWeek >= 20 ? '#84cc16' : p.avgHrsPerWeek >= 12 ? '#f59e0b' : '#ef4444'; });
-
-  chartInstances[prefix + 'weekly'] = new Chart(document.getElementById(prefix + 'weeklyHrsChart'), {
+  // 6. Avg hrs/week
+  var weeksCount = activeTab === 'q1' ? 13 : WEEKS_IN[activeTab];
+  charts.push(new Chart(document.getElementById('chartWeekly'), {
     type: 'bar',
-    data: { labels: wNames, datasets: [{ data: wSorted.map(function(p) { return p.avgHrsPerWeek; }), backgroundColor: wColors, borderRadius: 4 }] },
-    options: { responsive: true, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false }, ticks: { font: { size: 10 }, maxRotation: 45, minRotation: 25 } }, y: { beginAtZero: true, grid: { color: '#f1f5f9' }, title: { display: true, text: 'Hrs/Week', font: { size: 10 } } } } }
-  });
+    data: {
+      labels: names,
+      datasets: [{ label: 'Avg Hrs/Wk', data: sorted.map(t => +(data[t.key].estHours / weeksCount).toFixed(1)), backgroundColor: 'rgba(244,114,182,.6)' }]
+    },
+    options: chartOpts(false)
+  }));
 
-  // Person cards
-  var personEl = document.getElementById(prefix + 'personCards');
-  var scoreBg = function(s) { return s >= 8 ? '#22c55e' : s >= 6 ? '#84cc16' : s >= 5 ? '#eab308' : s >= 4 ? '#f97316' : '#ef4444'; };
-  var cardOrder = data.slice().sort(function(a, b) {
-    if (a.isBench) return -1; if (b.isBench) return 1;
-    return b.total - a.total;
-  });
+  // Assessment cards
+  renderAssessments(sorted, data, benchTotal, weeksCount);
+}
 
-  cardOrder.forEach(function(p) {
-    var prodClass = p.ratio >= 1.5 ? 'good' : p.ratio >= 0.8 ? '' : 'warn';
-    if (p.ratio < 0.5) prodClass = 'bad';
-    var hrsClass = p.estHours >= 120 ? 'good' : p.estHours >= 80 ? '' : 'warn';
-    if (p.estHours < 50) hrsClass = 'bad';
-    var wkHrsClass = p.avgHrsPerWeek >= 30 ? 'good' : p.avgHrsPerWeek >= 20 ? '' : p.avgHrsPerWeek >= 12 ? 'warn' : 'bad';
+function generateFlags(d, t, benchTotal, weeksCount) {
+  var flags = [];
+  var s = getScore(d, benchTotal);
 
-    var headerHtml = '';
-    if (hasScores && p.score !== undefined) {
-      headerHtml = '<div class="pa-header"><div class="pa-score" style="background:' + scoreBg(p.score) + '">' + p.score + '</div><div class="pa-info"><h3>' + p.name + '</h3><div class="pa-role">' + p.role + '</div>' + (p.summary ? '<div class="pa-summary">' + p.summary + '</div>' : '') + '</div></div>';
-    } else {
-      headerHtml = '<div class="pa-header"><div class="pa-info"><h3>' + p.name + '</h3><div class="pa-role">' + p.role + '</div></div></div>';
-    }
+  if (t.isBench) {
+    flags.push({ text: 'Benchmark (5/10)', cls: 'flag-yellow' });
+  }
+
+  if (d.total === 0) {
+    flags.push({ text: 'No Activity', cls: 'flag-red' });
+    return flags;
+  }
+
+  if (s >= 8) flags.push({ text: 'Top Performer', cls: 'flag-green' });
+  else if (s >= 6) flags.push({ text: 'Above Average', cls: 'flag-green' });
+  else if (s <= 2) flags.push({ text: 'Needs Review', cls: 'flag-red' });
+  else if (s <= 3) flags.push({ text: 'Below Average', cls: 'flag-red' });
+
+  if (d.ratio >= 1.3) flags.push({ text: 'High Efficiency', cls: 'flag-green' });
+  else if (d.ratio >= 1.0) flags.push({ text: 'Efficient', cls: 'flag-blue' });
+  else if (d.ratio < 0.5) flags.push({ text: 'Read-Heavy', cls: 'flag-yellow' });
+
+  if (d.creates > d.reads * 0.6) flags.push({ text: 'High Creator', cls: 'flag-cyan' });
+
+  var avgHrsWk = d.estHours / weeksCount;
+  if (avgHrsWk >= 40) flags.push({ text: '40+ Hrs/Wk Avg', cls: 'flag-green' });
+  else if (avgHrsWk < 15 && t.role === 'Claims Analyst') flags.push({ text: 'Low Hours', cls: 'flag-red' });
+
+  if (t.role === 'Head of Claims Management') flags.push({ text: 'Management Role', cls: 'flag-blue' });
+  if (t.role === 'Senior Claims Analyst') flags.push({ text: 'Senior Role', cls: 'flag-blue' });
+
+  return flags;
+}
+
+function generateSummary(d, t, benchTotal, weeksCount) {
+  if (d.total === 0) return t.name + ' had no recorded CRM activity this period. May indicate leave, onboarding, or system access issues.';
+
+  var s = getScore(d, benchTotal);
+  var avgHrsWk = (d.estHours / weeksCount).toFixed(1);
+  var pct = benchTotal > 0 ? Math.round(d.total / benchTotal * 100) : 0;
+
+  var perf = '';
+  if (s >= 8) perf = 'significantly above average';
+  else if (s >= 6) perf = 'above average';
+  else if (s === 5) perf = 'at benchmark level';
+  else if (s >= 3) perf = 'below benchmark';
+  else perf = 'well below benchmark';
+
+  var summary = t.name + ' logged ' + d.total.toLocaleString() + ' total actions (' + pct + '% of benchmark), performing ' + perf + '. ';
+  summary += 'Averaging ' + avgHrsWk + ' hrs/wk across ' + d.activeDays + ' active days with a ' + d.dailyRate + ' actions/day rate. ';
+
+  if (d.ratio >= 1.0) summary += 'Productive ratio of ' + d.ratio + ' indicates strong output per read. ';
+  else if (d.ratio < 0.5) summary += 'Low productive ratio (' + d.ratio + ') suggests mostly read/review activity. ';
+
+  if (t.role === 'Head of Claims Management') summary += 'As Head of Claims Management, lower CRM volume is expected given strategic and supervisory responsibilities.';
+  else if (t.role === 'Senior Claims Analyst') summary += 'As a Senior Claims Analyst, role includes mentorship and review duties beyond direct CRM actions.';
+
+  return summary;
+}
+
+function renderAssessments(sorted, data, benchTotal, weeksCount) {
+  var container = document.getElementById('assessments');
+  container.innerHTML = '';
+
+  sorted.forEach(function(t) {
+    var d = data[t.key];
+    var s = getScore(d, benchTotal);
+    var flags = generateFlags(d, t, benchTotal, weeksCount);
+    var summary = generateSummary(d, t, benchTotal, weeksCount);
+
+    var card = document.createElement('div');
+    card.className = 'assess-card ' + scoreClass(s) + (t.isBench ? ' bench' : '');
+
+    var canvasId = 'weekChart_' + t.key + '_' + activeTab;
 
     var flagsHtml = '';
-    if (hasScores && p.flags && p.flags.length > 0) {
-      flagsHtml = '<div class="flags">' + p.flags.map(function(f) { var i = f.indexOf(':'); return '<span class="flag ' + f.substring(0, i) + '">' + f.substring(i + 1) + '</span>'; }).join('') + '</div>';
-    }
+    flags.forEach(function(f) { flagsHtml += '<span class="flag ' + f.cls + '">' + f.text + '</span>'; });
 
-    var wkHtml = '';
-    if (p.weekTotals && Object.keys(p.weekTotals).length > 0) {
-      var wks = Object.keys(p.weekTotals);
-      var maxW = Math.max.apply(null, wks.map(function(k) { return p.weekTotals[k]; }));
-      wkHtml = '<div style="margin-top:10px"><div style="font-size:9px;color:#94a3b8;margin-bottom:4px;font-weight:600">WEEKLY PATTERN</div><div class="wk-row">';
-      wks.forEach(function(wk) {
-        var v = p.weekTotals[wk];
-        var h = maxW > 0 ? Math.max(Math.round(v / maxW * 40), 2) : 2;
-        wkHtml += '<div class="wk-bar"><div class="bar" style="height:' + h + 'px;background:' + (v === 0 ? '#fecaca' : '#3b82f6') + '"></div><div class="wl">' + wk.split(' ')[0] + '</div><div class="wv">' + v + '</div></div>';
-      });
-      wkHtml += '</div></div>';
-    }
+    card.innerHTML =
+      '<div class="card-header">' +
+        '<div class="left">' +
+          '<div class="aname">' + t.name + '</div>' +
+          '<div class="arole">' + t.role + '</div>' +
+        '</div>' +
+        '<div class="ascore" style="color:' + scoreColor(s) + '">' + s + '/10</div>' +
+      '</div>' +
+      '<div class="metrics-grid">' +
+        '<div class="metric"><div class="mv">' + d.total.toLocaleString() + '</div><div class="ml">Total</div></div>' +
+        '<div class="metric"><div class="mv">' + d.reads.toLocaleString() + '</div><div class="ml">Reads</div></div>' +
+        '<div class="metric"><div class="mv">' + d.creates.toLocaleString() + '</div><div class="ml">Creates</div></div>' +
+        '<div class="metric"><div class="mv">' + d.updates.toLocaleString() + '</div><div class="ml">Updates</div></div>' +
+        '<div class="metric"><div class="mv">' + d.productive.toLocaleString() + '</div><div class="ml">Productive</div></div>' +
+        '<div class="metric"><div class="mv">' + d.ratio + '</div><div class="ml">Ratio</div></div>' +
+        '<div class="metric"><div class="mv">' + d.activeDays + '</div><div class="ml">Active Days</div></div>' +
+        '<div class="metric"><div class="mv">' + d.estHours + 'h</div><div class="ml">Est. Hours</div></div>' +
+        '<div class="metric"><div class="mv">' + d.dailyRate + '</div><div class="ml">Daily Rate</div></div>' +
+      '</div>' +
+      '<div class="flags">' + flagsHtml + '</div>' +
+      '<div class="summary">' + summary + '</div>' +
+      '<div class="weekly-chart"><canvas id="' + canvasId + '"></canvas></div>';
 
-    personEl.innerHTML += '<div class="person-audit' + (p.isBench ? ' bcard' : '') + '">' + headerHtml + '<div class="mg"><div class="metric"><div class="mv">' + p.total.toLocaleString() + '</div><div class="ml">Total Actions</div></div><div class="metric ' + (p.productive >= 2400 ? 'good' : p.productive >= 1000 ? '' : 'bad') + '"><div class="mv">' + p.productive.toLocaleString() + '</div><div class="ml">Productive</div></div><div class="metric ' + prodClass + '"><div class="mv">' + p.ratio + 'x</div><div class="ml">Prod/Read</div></div><div class="metric"><div class="mv">' + p.activeDays + '</div><div class="ml">Active Days</div></div><div class="metric ' + hrsClass + '"><div class="mv">' + p.estHours + 'h</div><div class="ml">Est. Hours</div></div><div class="metric"><div class="mv">' + p.dailyRate + '</div><div class="ml">Actions/Day</div></div><div class="metric ' + wkHrsClass + '"><div class="mv">' + p.avgHrsPerWeek + 'h</div><div class="ml">Avg Hrs/Wk</div></div></div>' + flagsHtml + wkHtml + '</div>';
+    container.appendChild(card);
+
+    // Weekly mini chart
+    var weekLabels = getWeeksLabel(activeTab);
+    var weekData = getWeekData(t, activeTab);
+    if (weekData.some(function(v) { return v > 0; })) {
+      var ctx = document.getElementById(canvasId);
+      charts.push(new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: weekLabels,
+          datasets: [{ data: weekData, backgroundColor: scoreColor(s) + '99', borderRadius: 3 }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { ticks: { color: '#9ca3b8', font: { size: 9 } }, grid: { display: false } },
+            y: { ticks: { color: '#9ca3b8', font: { size: 9 } }, grid: { color: 'rgba(46,51,69,.3)' } }
+          }
+        }
+      }));
+    }
   });
 }
 
-var currentTab = 'feb';
-var rendered = {};
-
-function switchTab(tabId) {
-  // Hide all tabs
-  document.querySelectorAll('.tab-content').forEach(function(el) { el.classList.remove('active'); });
-  document.querySelectorAll('.tab-bar button').forEach(function(el) { el.classList.remove('active'); });
-
-  // Show selected
-  document.getElementById('tab-' + tabId).classList.add('active');
-  var btns = document.querySelectorAll('.tab-bar button');
-  var idx = { feb: 0, mar: 1, apr: 2, combined: 3 }[tabId];
-  btns[idx].classList.add('active');
-
-  // Destroy old charts if re-rendering
-  if (rendered[tabId]) {
-    destroyCharts(tabId + '_');
-    document.getElementById('tab-' + tabId).innerHTML = '';
-    rendered[tabId] = false;
-  }
-
-  // Render
-  if (!rendered[tabId]) {
-    if (tabId === 'feb') renderTab('feb', FEB_DATA, 'February 2026', 20, false);
-    else if (tabId === 'mar') renderTab('mar', MAR_DATA, 'March 2026', 21, false);
-    else if (tabId === 'apr') renderTab('apr', APR_DATA, 'April 2026', 22, true);
-    else if (tabId === 'combined') renderTab('combined', COMBINED_DATA, 'Combined FebâApr 2026', 63, false);
-    rendered[tabId] = true;
-  }
-
-  currentTab = tabId;
-}
-
-// Initial render
-switchTab('feb');
+// Init
+buildTabs();
+render();
 </script>
 </body>
 </html>
