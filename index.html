@@ -1,15 +1,8 @@
 <!DOCTYPE html>
-<script type="application/json" id="cowork-artifact-meta">
-{
-  "name": "ClaimsForce Monthly Activity - April 2026",
-  "schemaVersion": 1,
-  "description": "Full team activity audit for all 13 ClaimsForce members - April 2026. Benchmarked against Ashley Sacramento as 5/10 midpoint."
-}
-</script>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Team Activity Audit - April 2026</title>
+<title>ClaimsForce Team Activity - Feb-Apr 2026</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js" integrity="sha384-iU8HYtnGQ8Cy4zl7gbNMOhsDTTKX02BTXptVP/vqAWIaTfM7isw76iyZCsjL2eVi" crossorigin="anonymous"></script>
 <style>
 :root{color-scheme:light}
@@ -56,119 +49,309 @@ h1{font-size:20px;font-weight:700;margin-bottom:2px}
 .wk-bar .bar{background:#3b82f6;border-radius:2px 2px 0 0;margin:0 auto;width:80%}
 .wk-bar .wl{font-size:8px;color:#94a3b8;margin-top:2px}
 .wk-bar .wv{font-size:9px;color:#475569;font-weight:600}
+.tab-bar{display:flex;gap:0;margin-bottom:16px;border-bottom:2px solid #e2e8f0}
+.tab-bar button{background:none;border:none;padding:10px 20px;font-size:13px;font-weight:600;color:#64748b;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .2s}
+.tab-bar button:hover{color:#1e293b;background:#f1f5f9}
+.tab-bar button.active{color:#3b82f6;border-bottom-color:#3b82f6}
+.tab-content{display:none}
+.tab-content.active{display:block}
 </style>
 </head>
 <body>
 <h1>ClaimsForce Team Activity Audit</h1>
-<div class="sub">April 1-30, 2026 &middot; 13 Team Members &middot; Activity Log Data &middot; Full Month</div>
+<div class="sub">February - April 2026 &middot; 13 Team Members &middot; Activity Log Data</div>
 <div class="bench-note">
-<strong>Benchmark:</strong> Ashley Sacramento is the 5/10 midpoint (~194 actions/day, 1.52x productive ratio, 21 active days). Hours estimated from action volume (~45 actions/hr calibration). Chris (Dept Head) and Yane (#2) evaluated with role context.
+<strong>Benchmark:</strong> Ashley Sacramento is the 5/10 midpoint. Hours estimated from action volume (~45 actions/hr calibration). Chris (Dept Head) and Yane (#2) evaluated with role context.
 </div>
-<div class="scores-row" id="scoreCards"></div>
-<div class="chart-row">
-  <div class="chart-box full"><h3>Monthly CRM Activity Volume - All Team (April 2026)</h3><div class="chart-desc"><strong>Reads</strong> = opening/viewing a record (claim, contact, task). <strong>Creates</strong> = adding a new record (note, task, document, email, estimate). <strong>Updates</strong> = modifying an existing record (changing a claim stage, editing fields, updating status). Creates + Updates = productive actions.</div><canvas id="volumeChart" height="70"></canvas></div>
+
+<div class="tab-bar">
+  <button class="active" onclick="switchTab('feb')">February</button>
+  <button onclick="switchTab('mar')">March</button>
+  <button onclick="switchTab('apr')">April</button>
+  <button onclick="switchTab('combined')">Combined (Feb&ndash;Apr)</button>
 </div>
-<div class="chart-row">
-  <div class="chart-box"><h3>Productive/Read Ratio</h3><div class="chart-desc">How many productive actions (creates + updates) per read. Above 1.0 = acting more than browsing. Below 0.5 = mostly just viewing records without taking action.</div><canvas id="ratioChart"></canvas></div>
-  <div class="chart-box"><h3>Estimated Monthly Hours</h3><div class="chart-desc">Total hours estimated from CRM action volume using ~45 actions/hour calibration. Not a time clock &mdash; measures CRM engagement time only.</div><canvas id="hoursChart"></canvas></div>
-</div>
-<div class="chart-row">
-  <div class="chart-box"><h3>Active Days (of ~22 working days)</h3><div class="chart-desc">Number of days with at least 1 CRM action logged. April had ~22 business days. Missing days may indicate PTO, field work, or disengagement.</div><canvas id="daysChart"></canvas></div>
-  <div class="chart-box"><h3>Daily Action Rate (avg/active day)</h3><div class="chart-desc">Average total actions per day they were active. Higher = more CRM throughput on working days. Benchmark is ~194 actions/day.</div><canvas id="rateChart"></canvas></div>
-</div>
-<div class="chart-row">
-  <div class="chart-box full"><h3>Avg Hours per Week per Rep</h3><div class="chart-desc">Estimated monthly hours divided by the number of weeks with activity. Shows weekly CRM workload per rep &mdash; 40h/wk = full-time equivalent. Reps with fewer active weeks get their hours concentrated into fewer weeks.</div><canvas id="weeklyHrsChart"></canvas></div>
-</div>
-<div class="section-title">Individual Assessments</div>
-<div class="chart-desc" style="margin-bottom:12px">Each card shows a rep's score (1-10), key metrics, and flags. Metrics: <strong>Total Actions</strong> = all CRM events. <strong>Productive</strong> = creates + updates only. <strong>Prod/Read</strong> = ratio of productive actions to reads. <strong>Active Days</strong> = days with any CRM activity. <strong>Est. Hours</strong> = estimated CRM time from action volume. <strong>Actions/Day</strong> = avg actions on days worked. <strong>Avg Hrs/Wk</strong> = monthly hours divided by active weeks.</div>
-<div id="personCards"></div>
+
+<div id="tab-feb" class="tab-content active"></div>
+<div id="tab-mar" class="tab-content"></div>
+<div id="tab-apr" class="tab-content"></div>
+<div id="tab-combined" class="tab-content"></div>
+
 <script>
-var P=[{"name": "Mary Facio Rubio", "role": "Team Member", "score": 9, "isBench": false, "total": 7889, "reads": 4485, "creates": 2047, "updates": 1326, "productive": 3373, "ratio": 0.75, "activeDays": 22, "estHours": 105.2, "avgDailyHrs": 4.8, "dailyRate": 358.6, "flags": ["green:Highest volume tier (7,889 actions)", "green:Strong attendance (22 active days)", "green:Exceptional create volume (2,047)"], "summary": "The team's most active member this month with 7,889 total CRM actions across 22 active days. Mary averages 359 actions/day with a read-heavy pattern (0.75 ratio) that's offset by sheer volume -- 2,047 creates and 1,326 updates is massive output. Her weeks 3-4 show sustained 300-500+ action days with no drop-off. Working weekends (Apr 19, 20, 25) shows extraordinary dedication. The volume alone puts her at the top, but the read ratio suggests she could be more targeted in her CRM navigation.", "weekTotals": {"W1 (Apr 1-5)": 0, "W2 (Apr 6-12)": 0, "W3 (Apr 13-19)": 1534, "W4 (Apr 20-26)": 1747, "W5 (Apr 27-30)": 1631}}, {"name": "Emmanuel Reblora", "role": "Team Member", "score": 9, "isBench": false, "total": 6937, "reads": 3333, "creates": 2210, "updates": 1370, "productive": 3580, "ratio": 1.07, "activeDays": 19, "estHours": 154.2, "avgDailyHrs": 8.1, "dailyRate": 365.1, "flags": ["green:Highest volume tier (6,937 actions)", "green:Good productive ratio (1.07x)", "green:High monthly hours (154h est.)", "green:Exceptional create volume (2,210)"], "summary": "Second-highest volume on the team at 6,937 actions over 19 active days (365/day average). His productive ratio of 1.07 means he's acting on nearly everything he opens. 2,210 creates and 1,370 updates represent massive throughput -- he's not just viewing claims, he's moving them. Slightly fewer active days than top peers (19 vs 21-24) but his daily output is among the highest. A powerhouse performer who combines volume with efficiency.", "weekTotals": {}}, {"name": "Daniel Davila", "role": "Team Member", "score": 9, "isBench": false, "total": 5758, "reads": 2316, "creates": 2147, "updates": 1285, "productive": 3432, "ratio": 1.48, "activeDays": 19, "estHours": 124.3, "avgDailyHrs": 6.5, "dailyRate": 303.1, "flags": ["green:High volume (5,758 actions)", "green:Good productive ratio (1.48x)", "green:High monthly hours (124h est.)", "green:Exceptional create volume (2,147)"], "summary": "A workload monster at 5,758 actions with the month's best productive ratio among high-volume users (1.48x). His 2,147 creates are second only to Emmanuel, and 1,285 updates lead the team. 19 active days with massive daily output (303/day). One near-zero day (Apr 17: 2 actions) and one light day (Apr 24: 14 actions) are the only blemishes. When Daniel works, he's one of the most productive people on the team.", "weekTotals": {"W1 (Apr 1-5)": 382, "W2 (Apr 6-12)": 1771, "W3 (Apr 13-19)": 1093, "W4 (Apr 20-26)": 1125, "W5 (Apr 27-30)": 1377}}, {"name": "Raphael Rivera", "role": "Team Member", "score": 7, "isBench": false, "total": 5860, "reads": 3399, "creates": 1611, "updates": 822, "productive": 2433, "ratio": 0.72, "activeDays": 18, "estHours": 124.8, "avgDailyHrs": 6.9, "dailyRate": 325.6, "flags": ["green:High volume (5,860 actions)", "green:High monthly hours (125h est.)", "green:Strong create volume (1,611)"], "summary": "Consistently one of the top performers with 5,860 actions across 18 active days. His 326 actions/day average is strong, and the byDay data shows he works weekends occasionally (Apr 12). Two full weeks missing mid-month (Apr 18-26) suggests PTO or assignment changes, but his production in the weeks he IS working is exceptional -- multiple 400+ action days. Creates (1,611) and updates (822) are both strong.", "weekTotals": {"W1 (Apr 1-5)": 920, "W2 (Apr 6-12)": 1482, "W3 (Apr 13-19)": 1518, "W4 (Apr 20-26)": 0, "W5 (Apr 27-30)": 1912}}, {"name": "David Delgado", "role": "Team Member", "score": 7, "isBench": false, "total": 5244, "reads": 2590, "creates": 1529, "updates": 1085, "productive": 2614, "ratio": 1.01, "activeDays": 17, "estHours": 115.6, "avgDailyHrs": 6.8, "dailyRate": 308.5, "flags": ["green:High volume (5,244 actions)", "green:Good productive ratio (1.01x)", "green:Strong create volume (1,529)"], "summary": "Strong 5,244 actions across 17 active days (308/day). Excellent productive ratio (1.01x) -- balanced between reading and acting. No activity in Week 1 (Apr 1-5) is notable, but from Apr 6 onward he's one of the most consistent producers. 1,529 creates and 1,085 updates show he's actively processing claims. One light day (Apr 18: 35 actions) but otherwise very steady 270-420 action days.", "weekTotals": {"W1 (Apr 1-5)": 0, "W2 (Apr 6-12)": 1429, "W3 (Apr 13-19)": 1331, "W4 (Apr 20-26)": 1605, "W5 (Apr 27-30)": 839}}, {"name": "Carlos Villanueva", "role": "Team Member", "score": 7, "isBench": false, "total": 2691, "reads": 968, "creates": 1161, "updates": 546, "productive": 1707, "ratio": 1.76, "activeDays": 16, "estHours": 59.4, "avgDailyHrs": 3.7, "dailyRate": 168.2, "flags": ["green:Excellent productive ratio (1.76x)", "yellow:Below-average attendance (16 days)", "yellow:Below-average hours (59h est.)", "green:Strong create volume (1,161)"], "summary": "Excellent efficiency at 2,691 actions with the team's best productive ratio (1.76x). His 1,161 creates and 546 updates far outpace his reads (968). Works 16 active days but makes each day count -- averaging 168 actions/day with minimal wasted reads. Heavy days (342 on Apr 22, 291 on Apr 28) show burst capability. Creates dominate his workflow suggesting document/estimate processing. Strong performer despite fewer total actions.", "weekTotals": {"W1 (Apr 1-5)": 291, "W2 (Apr 6-12)": 224, "W3 (Apr 13-19)": 497, "W4 (Apr 20-26)": 858, "W5 (Apr 27-30)": 805}}, {"name": "Sheena Lalunio", "role": "Team Member", "score": 6, "isBench": false, "total": 4672, "reads": 2393, "creates": 1293, "updates": 976, "productive": 2269, "ratio": 0.95, "activeDays": 24, "estHours": 103.8, "avgDailyHrs": 4.3, "dailyRate": 194.7, "flags": ["green:High volume (4,672 actions)", "green:Strong attendance (24 active days)", "green:Strong create volume (1,293)"], "summary": "Good volume at 4,672 actions and the most active days on the team (24). Present nearly every working day, including weekends. Productive ratio of 0.95x is solid. 1,293 creates and 976 updates across 24 days shows consistent daily output. Her daily average (195/day) is moderate -- she's working more days at a steady pace rather than having huge burst days. Dependable and consistent.", "weekTotals": {}}, {"name": "Hacey Bonus", "role": "Team Member", "score": 6, "isBench": false, "total": 4041, "reads": 2201, "creates": 1367, "updates": 429, "productive": 1796, "ratio": 0.82, "activeDays": 20, "estHours": 85.5, "avgDailyHrs": 4.3, "dailyRate": 202.1, "flags": ["green:High volume (4,041 actions)", "green:Strong attendance (20 active days)", "green:Strong create volume (1,367)"], "summary": "4,041 actions across 20 active days. Strong first day (600 actions on Apr 1) followed by an inconsistent pattern -- some days very light (18 on Apr 2, 39 on Apr 9). Creates (1,367) are good but updates (429) are lower relative to volume. Productive ratio (0.81x) is adequate. The inconsistency day-to-day is the main concern: ranging from 1 action (Apr 18) to 600 (Apr 1). Needs more steady daily engagement.", "weekTotals": {"W1 (Apr 1-5)": 618, "W2 (Apr 6-12)": 521, "W3 (Apr 13-19)": 637, "W4 (Apr 20-26)": 1032, "W5 (Apr 27-30)": 1189}}, {"name": "Ashley Sacramento", "role": "Benchmark (5/10)", "score": 5, "isBench": true, "total": 4066, "reads": 1607, "creates": 1498, "updates": 946, "productive": 2444, "ratio": 1.52, "activeDays": 21, "estHours": 90.4, "avgDailyHrs": 4.3, "dailyRate": 193.6, "flags": ["green:High volume (4,066 actions)", "green:Excellent productive ratio (1.52x)", "green:Strong attendance (21 active days)", "green:Strong create volume (1,498)"], "summary": "The benchmark at 5/10. 4,066 actions over 21 active days (194/day). Strong productive ratio (1.52x) -- she creates/updates more than she reads. 1,498 creates and 946 updates show solid output. 21 active days is good attendance. This is what 'meeting expectations' looks like: consistent presence, good efficiency, meaningful daily output.", "weekTotals": {}}, {"name": "Yane Vacca", "role": "#2 / Second in Command", "score": 4, "isBench": false, "total": 2079, "reads": 1408, "creates": 421, "updates": 239, "productive": 660, "ratio": 0.47, "activeDays": 16, "estHours": 46.0, "avgDailyHrs": 2.9, "dailyRate": 129.9, "flags": ["red:Very low productive ratio (0.47x)", "yellow:Below-average attendance (16 days)", "red:Very low monthly hours (46h est.)"], "summary": "As #2/Second in Command, 2,079 actions over 16 active days. Productive ratio (0.47x) is very read-heavy -- she's viewing far more than she's acting on. 1,408 reads vs only 421 creates and 239 updates. This could indicate a supervisory/review role, but the low productive output is concerning for the #2 position. Active days (16) are below average. Missing full weeks (Apr 18-26) impacts overall presence. Needs context on whether her value comes from off-CRM management work.", "weekTotals": {"W1 (Apr 1-5)": 198, "W2 (Apr 6-12)": 755, "W3 (Apr 13-19)": 542, "W4 (Apr 20-26)": 0, "W5 (Apr 27-30)": 573}}, {"name": "Kneil De Jesus", "role": "Team Member", "score": 3, "isBench": false, "total": 1279, "reads": 774, "creates": 346, "updates": 157, "productive": 503, "ratio": 0.65, "activeDays": 16, "estHours": 28.4, "avgDailyHrs": 1.8, "dailyRate": 79.9, "flags": ["yellow:Low volume (1,279 actions)", "yellow:Read-heavy ratio (0.65x)", "yellow:Below-average attendance (16 days)", "red:Very low monthly hours (28h est.)"], "summary": "1,279 actions across 16 active days (80/day average). Missing 6 working days in the month is significant. Productive ratio (0.65x) is read-leaning. Days he works show moderate output (57-112 actions/day) but nothing exceptional. Creates (346) are reasonable for his days worked. The main issues are attendance (16/22 days) and daily volume that's well below team average even when present.", "weekTotals": {"W1 (Apr 1-5)": 9, "W2 (Apr 6-12)": 389, "W3 (Apr 13-19)": 409, "W4 (Apr 20-26)": 293, "W5 (Apr 27-30)": 177}}, {"name": "Chris Dimaculangan", "role": "Department Head", "score": 3, "isBench": false, "total": 1261, "reads": 953, "creates": 180, "updates": 123, "productive": 303, "ratio": 0.32, "activeDays": 19, "estHours": 27.9, "avgDailyHrs": 1.5, "dailyRate": 66.4, "flags": ["yellow:Low volume (1,261 actions)", "red:Very low productive ratio (0.32x)", "red:Very low monthly hours (28h est.)", "red:Very few creates (180)"], "summary": "As Department Head, 1,261 actions over 19 active days. Very read-heavy (0.32 ratio) -- 953 reads vs only 180 creates and 123 updates. Several near-zero days (Apr 1: 2, Apr 3: 3, Apr 22: 1). His best days (Apr 14: 220, Apr 6: 189) show he CAN engage deeply. Active days (19) is decent attendance, but many of those days have minimal activity. As dept head, some work happens off-platform, but the CRM footprint is light.", "weekTotals": {"W1 (Apr 1-5)": 5, "W2 (Apr 6-12)": 494, "W3 (Apr 13-19)": 443, "W4 (Apr 20-26)": 36, "W5 (Apr 27-30)": 278}}, {"name": "Juan David Valencia", "role": "Team Member", "score": 2, "isBench": false, "total": 1186, "reads": 859, "creates": 249, "updates": 73, "productive": 322, "ratio": 0.37, "activeDays": 16, "estHours": 26.2, "avgDailyHrs": 1.6, "dailyRate": 74.1, "flags": ["yellow:Low volume (1,186 actions)", "red:Very low productive ratio (0.37x)", "yellow:Below-average attendance (16 days)", "red:Very low monthly hours (26h est.)"], "summary": "Lowest volume on the team at 1,186 actions over 16 active days (74/day). Very read-heavy (0.37 ratio) -- 859 reads vs only 249 creates and 73 updates. One outlier day (Apr 21: 210 actions) shows he CAN produce, but typical days are 50-80 actions. 73 updates for the entire month is concerning -- he's rarely modifying records. Present 16 days but consistently underproducing. Same attendance issue as Kneil but with even lower daily output.", "weekTotals": {"W1 (Apr 1-5)": 68, "W2 (Apr 6-12)": 325, "W3 (Apr 13-19)": 48, "W4 (Apr 20-26)": 513, "W5 (Apr 27-30)": 227}}];
-var cardsEl=document.getElementById('scoreCards');
-P.forEach(function(p){
-  cardsEl.innerHTML+='<div class="sc'+(p.isBench?' benchmark':'')+'"><div class="name">'+p.name.split(' ')[0]+'</div><div class="role">'+p.role+'</div><div class="score s'+p.score+'">'+p.score+'<span class="slash">/10</span></div><div class="hrs">'+p.estHours+'h &middot; '+p.total.toLocaleString()+'</div></div>';
+// DATA
+var FEB_DATA=[
+  {"name":"Ashley Sacramento","role":"Benchmark (5/10)","isBench":true,"total":4141,"reads":1962,"creates":1307,"updates":860,"productive":2167,"ratio":1.1,"activeDays":19,"estHours":92,"dailyRate":217.9,"weekTotals":{"W1":1387,"W2":931,"W3":1216,"W4":607}},
+  {"name":"Carlos Villanueva","role":"Team Member","isBench":false,"total":3187,"reads":1475,"creates":1104,"updates":595,"productive":1699,"ratio":1.15,"activeDays":19,"estHours":70.8,"dailyRate":167.7,"weekTotals":{"W1":867,"W2":547,"W3":890,"W4":883}},
+  {"name":"Chris Dimaculangan","role":"Department Head","isBench":false,"total":1135,"reads":810,"creates":168,"updates":150,"productive":318,"ratio":0.39,"activeDays":22,"estHours":25.2,"dailyRate":51.6,"weekTotals":{"W1":213,"W2":307,"W3":393,"W4":222}},
+  {"name":"David Delgado","role":"Team Member","isBench":false,"total":7804,"reads":3686,"creates":2160,"updates":1907,"productive":4067,"ratio":1.1,"activeDays":20,"estHours":173.4,"dailyRate":390.2,"weekTotals":{"W1":2085,"W2":1700,"W3":1944,"W4":2075}},
+  {"name":"Emmanuel Reblora","role":"Team Member","isBench":false,"total":7930,"reads":4120,"creates":2320,"updates":1458,"productive":3778,"ratio":0.92,"activeDays":22,"estHours":176.2,"dailyRate":360.5,"weekTotals":{"W1":1863,"W2":2006,"W3":1648,"W4":2413}},
+  {"name":"Juan David Valencia","role":"Team Member","isBench":false,"total":1557,"reads":1172,"creates":253,"updates":131,"productive":384,"ratio":0.33,"activeDays":20,"estHours":34.6,"dailyRate":77.9,"weekTotals":{"W1":312,"W2":346,"W3":596,"W4":303}},
+  {"name":"Kneil De Jesus","role":"Team Member","isBench":false,"total":2612,"reads":1532,"creates":633,"updates":430,"productive":1063,"ratio":0.69,"activeDays":19,"estHours":58,"dailyRate":137.5,"weekTotals":{"W1":469,"W2":502,"W3":925,"W4":716}},
+  {"name":"Mary Facio Rubio","role":"Team Member","isBench":false,"total":7732,"reads":4041,"creates":2124,"updates":1527,"productive":3651,"ratio":0.9,"activeDays":28,"estHours":171.8,"dailyRate":276.1,"weekTotals":{"W5":14,"W1":2116,"W2":1709,"W3":2114,"W4":1779}},
+  {"name":"Raphael Rivera","role":"Team Member","isBench":false,"total":7181,"reads":3855,"creates":2187,"updates":1122,"productive":3309,"ratio":0.86,"activeDays":22,"estHours":159.6,"dailyRate":326.4,"weekTotals":{"W5":67,"W1":1278,"W2":1770,"W3":2161,"W4":1905}},
+  {"name":"Sheena Lalunio","role":"Team Member","isBench":false,"total":10520,"reads":4813,"creates":3776,"updates":1674,"productive":5450,"ratio":1.13,"activeDays":21,"estHours":233.8,"dailyRate":501,"weekTotals":{"W1":2169,"W2":2274,"W3":2813,"W4":3264}},
+  {"name":"Daniel Davila","role":"Team Member","isBench":false,"total":6563,"reads":2919,"creates":2127,"updates":1497,"productive":3624,"ratio":1.24,"activeDays":21,"estHours":145.8,"dailyRate":312.5,"weekTotals":{"W1":1526,"W2":1009,"W3":1832,"W4":2196}},
+  {"name":"Hacey Bonus","role":"Team Member","isBench":false,"total":3542,"reads":2203,"creates":1022,"updates":289,"productive":1311,"ratio":0.6,"activeDays":20,"estHours":78.7,"dailyRate":177.1,"weekTotals":{"W1":655,"W2":828,"W3":992,"W4":1067}},
+  {"name":"Yane Vacca","role":"#2 / Second in Command","isBench":false,"total":3248,"reads":2016,"creates":658,"updates":412,"productive":1070,"ratio":0.53,"activeDays":19,"estHours":72.2,"dailyRate":170.9,"weekTotals":{"W1":547,"W2":784,"W3":1083,"W4":834}}
+];
+
+var MAR_DATA=[
+  {"name":"Ashley Sacramento","role":"Benchmark (5/10)","isBench":true,"total":3059,"reads":1398,"creates":964,"updates":694,"productive":1658,"ratio":1.19,"activeDays":19,"estHours":68,"dailyRate":161,"weekTotals":{"W1":658,"W2":218,"W3":755,"W4":886,"W5":542}},
+  {"name":"Carlos Villanueva","role":"Team Member","isBench":false,"total":2315,"reads":992,"creates":918,"updates":386,"productive":1304,"ratio":1.31,"activeDays":17,"estHours":51.4,"dailyRate":136.2,"weekTotals":{"W1":487,"W2":865,"W3":403,"W4":106,"W5":454}},
+  {"name":"Chris Dimaculangan","role":"Department Head","isBench":false,"total":779,"reads":548,"creates":152,"updates":74,"productive":226,"ratio":0.41,"activeDays":21,"estHours":17.3,"dailyRate":37.1,"weekTotals":{"W1":205,"W2":188,"W3":142,"W4":196,"W5":48}},
+  {"name":"David Delgado","role":"Team Member","isBench":false,"total":5615,"reads":2919,"creates":1347,"updates":1325,"productive":2672,"ratio":0.92,"activeDays":19,"estHours":124.8,"dailyRate":295.5,"weekTotals":{"W1":1410,"W2":923,"W3":1797,"W4":1485}},
+  {"name":"Emmanuel Reblora","role":"Team Member","isBench":false,"total":7613,"reads":3681,"creates":2428,"updates":1401,"productive":3829,"ratio":1.04,"activeDays":21,"estHours":169.2,"dailyRate":362.5,"weekTotals":{"W1":2049,"W2":1245,"W3":1739,"W4":1670,"W5":910}},
+  {"name":"Juan David Valencia","role":"Team Member","isBench":false,"total":1253,"reads":890,"creates":248,"updates":114,"productive":362,"ratio":0.41,"activeDays":20,"estHours":27.8,"dailyRate":62.7,"weekTotals":{"W1":347,"W2":218,"W3":316,"W4":235,"W5":137}},
+  {"name":"Kneil De Jesus","role":"Team Member","isBench":false,"total":2192,"reads":1198,"creates":597,"updates":387,"productive":984,"ratio":0.82,"activeDays":21,"estHours":48.7,"dailyRate":104.4,"weekTotals":{"W1":673,"W2":461,"W3":353,"W4":550,"W5":155}},
+  {"name":"Mary Facio Rubio","role":"Team Member","isBench":false,"total":8461,"reads":4692,"creates":2305,"updates":1432,"productive":3737,"ratio":0.8,"activeDays":28,"estHours":188,"dailyRate":302.2,"weekTotals":{"W4":2244,"W1":1913,"W2":1824,"W3":1278,"W5":1202}},
+  {"name":"Raphael Rivera","role":"Team Member","isBench":false,"total":6951,"reads":3940,"creates":1978,"updates":1012,"productive":2990,"ratio":0.76,"activeDays":23,"estHours":154.5,"dailyRate":302.2,"weekTotals":{"W4":1332,"W1":1638,"W2":1426,"W3":1809,"W5":746}},
+  {"name":"Sheena Lalunio","role":"Team Member","isBench":false,"total":9231,"reads":4531,"creates":3081,"updates":1557,"productive":4638,"ratio":1.02,"activeDays":23,"estHours":205.1,"dailyRate":401.3,"weekTotals":{"W1":2239,"W2":2117,"W3":2092,"W4":1918,"W5":865}},
+  {"name":"Daniel Davila","role":"Team Member","isBench":false,"total":6837,"reads":2903,"creates":2299,"updates":1632,"productive":3931,"ratio":1.35,"activeDays":25,"estHours":151.9,"dailyRate":273.5,"weekTotals":{"W4":1791,"W1":1631,"W2":1413,"W3":1451,"W5":551}},
+  {"name":"Hacey Bonus","role":"Team Member","isBench":false,"total":4389,"reads":2703,"creates":1232,"updates":415,"productive":1647,"ratio":0.61,"activeDays":23,"estHours":97.5,"dailyRate":190.8,"weekTotals":{"W1":936,"W2":693,"W3":905,"W4":935,"W5":920}},
+  {"name":"Yane Vacca","role":"#2 / Second in Command","isBench":false,"total":3013,"reads":2069,"creates":536,"updates":303,"productive":839,"ratio":0.41,"activeDays":18,"estHours":67,"dailyRate":167.4,"weekTotals":{"W1":368,"W2":999,"W3":588,"W4":543,"W5":515}}
+];
+
+var APR_DATA=[{"name":"Mary Facio Rubio","role":"Team Member","score":9,"isBench":false,"total":7889,"reads":4485,"creates":2047,"updates":1326,"productive":3373,"ratio":0.75,"activeDays":22,"estHours":105.2,"avgDailyHrs":4.8,"dailyRate":358.6,"flags":["green:Highest volume tier (7,889 actions)","green:Strong attendance (22 active days)","green:Exceptional create volume (2,047)"],"summary":"The team's most active member this month with 7,889 total CRM actions across 22 active days. Mary averages 359 actions/day with a read-heavy pattern (0.75 ratio) that's offset by sheer volume -- 2,047 creates and 1,326 updates is massive output. Her weeks 3-4 show sustained 300-500+ action days with no drop-off. Working weekends (Apr 19, 20, 25) shows extraordinary dedication. The volume alone puts her at the top, but the read ratio suggests she could be more targeted in her CRM navigation.","weekTotals":{"W1 (Apr 1-5)":0,"W2 (Apr 6-12)":0,"W3 (Apr 13-19)":1534,"W4 (Apr 20-26)":1747,"W5 (Apr 27-30)":1631}},{"name":"Emmanuel Reblora","role":"Team Member","score":9,"isBench":false,"total":6937,"reads":3333,"creates":2210,"updates":1370,"productive":3580,"ratio":1.07,"activeDays":19,"estHours":154.2,"avgDailyHrs":8.1,"dailyRate":365.1,"flags":["green:Highest volume tier (6,937 actions)","green:Good productive ratio (1.07x)","green:High monthly hours (154h est.)","green:Exceptional create volume (2,210)"],"summary":"Second-highest volume on the team at 6,937 actions over 19 active days (365/day average). His productive ratio of 1.07 means he's acting on nearly everything he opens. 2,210 creates and 1,370 updates represent massive throughput -- he's not just viewing claims, he's moving them. Slightly fewer active days than top peers (19 vs 21-24) but his daily output is among the highest. A powerhouse performer who combines volume with efficiency.","weekTotals":{}},{"name":"Daniel Davila","role":"Team Member","score":9,"isBench":false,"total":5758,"reads":2316,"creates":2147,"updates":1285,"productive":3432,"ratio":1.48,"activeDays":19,"estHours":124.3,"avgDailyHrs":6.5,"dailyRate":303.1,"flags":["green:High volume (5,758 actions)","green:Good productive ratio (1.48x)","green:High monthly hours (124h est.)","green:Exceptional create volume (2,147)"],"summary":"A workload monster at 5,758 actions with the month's best productive ratio among high-volume users (1.48x). His 2,147 creates are second only to Emmanuel, and 1,285 updates lead the team. 19 active days with massive daily output (303/day). One near-zero day (Apr 17: 2 actions) and one light day (Apr 24: 14 actions) are the only blemishes. When Daniel works, he's one of the most productive people on the team.","weekTotals":{"W1 (Apr 1-5)":382,"W2 (Apr 6-12)":1771,"W3 (Apr 13-19)":1093,"W4 (Apr 20-26)":1125,"W5 (Apr 27-30)":1377}},{"name":"Raphael Rivera","role":"Team Member","score":7,"isBench":false,"total":5860,"reads":3399,"creates":1611,"updates":822,"productive":2433,"ratio":0.72,"activeDays":18,"estHours":124.8,"avgDailyHrs":6.9,"dailyRate":325.6,"flags":["green:High volume (5,860 actions)","green:High monthly hours (125h est.)","green:Strong create volume (1,611)"],"summary":"Consistently one of the top performers with 5,860 actions across 18 active days. His 326 actions/day average is strong, and the byDay data shows he works weekends occasionally (Apr 12). Two full weeks missing mid-month (Apr 18-26) suggests PTO or assignment changes, but his production in the weeks he IS working is exceptional -- multiple 400+ action days. Creates (1,611) and updates (822) are both strong.","weekTotals":{"W1 (Apr 1-5)":920,"W2 (Apr 6-12)":1482,"W3 (Apr 13-19)":1518,"W4 (Apr 20-26)":0,"W5 (Apr 27-30)":1912}},{"name":"David Delgado","role":"Team Member","score":7,"isBench":false,"total":5244,"reads":2590,"creates":1529,"updates":1085,"productive":2614,"ratio":1.01,"activeDays":17,"estHours":115.6,"avgDailyHrs":6.8,"dailyRate":308.5,"flags":["green:High volume (5,244 actions)","green:Good productive ratio (1.01x)","green:Strong create volume (1,529)"],"summary":"Strong 5,244 actions across 17 active days (308/day). Excellent productive ratio (1.01x) -- balanced between reading and acting. No activity in Week 1 (Apr 1-5) is notable, but from Apr 6 onward he's one of the most consistent producers. 1,529 creates and 1,085 updates show he's actively processing claims. One light day (Apr 18: 35 actions) but otherwise very steady 270-420 action days.","weekTotals":{"W1 (Apr 1-5)":0,"W2 (Apr 6-12)":1429,"W3 (Apr 13-19)":1331,"W4 (Apr 20-26)":1605,"W5 (Apr 27-30)":839}},{"name":"Carlos Villanueva","role":"Team Member","score":7,"isBench":false,"total":2691,"reads":968,"creates":1161,"updates":546,"productive":1707,"ratio":1.76,"activeDays":16,"estHours":59.4,"avgDailyHrs":3.7,"dailyRate":168.2,"flags":["green:Excellent productive ratio (1.76x)","yellow:Below-average attendance (16 days)","yellow:Below-average hours (59h est.)","green:Strong create volume (1,161)"],"summary":"Excellent efficiency at 2,691 actions with the team's best productive ratio (1.76x). His 1,161 creates and 546 updates far outpace his reads (968). Works 16 active days but makes each day count -- averaging 168 actions/day with minimal wasted reads. Heavy days (342 on Apr 22, 291 on Apr 28) show burst capability. Creates dominate his workflow suggesting document/estimate processing. Strong performer despite fewer total actions.","weekTotals":{"W1 (Apr 1-5)":291,"W2 (Apr 6-12)":224,"W3 (Apr 13-19)":497,"W4 (Apr 20-26)":858,"W5 (Apr 27-30)":805}},{"name":"Sheena Lalunio","role":"Team Member","score":6,"isBench":false,"total":4672,"reads":2393,"creates":1293,"updates":976,"productive":2269,"ratio":0.95,"activeDays":24,"estHours":103.8,"avgDailyHrs":4.3,"dailyRate":194.7,"flags":["green:High volume (4,672 actions)","green:Strong attendance (24 active days)","green:Strong create volume (1,293)"],"summary":"Good volume at 4,672 actions and the most active days on the team (24). Present nearly every working day, including weekends. Productive ratio of 0.95x is solid. 1,293 creates and 976 updates across 24 days shows consistent daily output. Her daily average (195/day) is moderate -- she's working more days at a steady pace rather than having huge burst days. Dependable and consistent.","weekTotals":{}},{"name":"Hacey Bonus","role":"Team Member","score":6,"isBench":false,"total":4041,"reads":2201,"creates":1367,"updates":429,"productive":1796,"ratio":0.82,"activeDays":20,"estHours":85.5,"avgDailyHrs":4.3,"dailyRate":202.1,"flags":["green:High volume (4,041 actions)","green:Strong attendance (20 active days)","green:Strong create volume (1,367)"],"summary":"4,041 actions across 20 active days. Strong first day (600 actions on Apr 1) followed by an inconsistent pattern -- some days very light (18 on Apr 2, 39 on Apr 9). Creates (1,367) are good but updates (429) are lower relative to volume. Productive ratio (0.81x) is adequate. The inconsistency day-to-day is the main concern: ranging from 1 action (Apr 18) to 600 (Apr 1). Needs more steady daily engagement.","weekTotals":{"W1 (Apr 1-5)":618,"W2 (Apr 6-12)":521,"W3 (Apr 13-19)":637,"W4 (Apr 20-26)":1032,"W5 (Apr 27-30)":1189}},{"name":"Ashley Sacramento","role":"Benchmark (5/10)","score":5,"isBench":true,"total":4066,"reads":1607,"creates":1498,"updates":946,"productive":2444,"ratio":1.52,"activeDays":21,"estHours":90.4,"avgDailyHrs":4.3,"dailyRate":193.6,"flags":["green:High volume (4,066 actions)","green:Excellent productive ratio (1.52x)","green:Strong attendance (21 active days)","green:Strong create volume (1,498)"],"summary":"The benchmark at 5/10. 4,066 actions over 21 active days (194/day). Strong productive ratio (1.52x) -- she creates/updates more than she reads. 1,498 creates and 946 updates show solid output. 21 active days is good attendance. This is what 'meeting expectations' looks like: consistent presence, good efficiency, meaningful daily output.","weekTotals":{}},{"name":"Yane Vacca","role":"#2 / Second in Command","score":4,"isBench":false,"total":2079,"reads":1408,"creates":421,"updates":239,"productive":660,"ratio":0.47,"activeDays":16,"estHours":46,"avgDailyHrs":2.9,"dailyRate":129.9,"flags":["red:Very low productive ratio (0.47x)","yellow:Below-average attendance (16 days)","red:Very low monthly hours (46h est.)"],"summary":"As #2/Second in Command, 2,079 actions over 16 active days. Productive ratio (0.47x) is very read-heavy -- she's viewing far more than she's acting on. 1,408 reads vs only 421 creates and 239 updates. This could indicate a supervisory/review role, but the low productive output is concerning for the #2 position. Active days (16) are below average. Missing full weeks (Apr 18-26) impacts overall presence. Needs context on whether her value comes from off-CRM management work.","weekTotals":{"W1 (Apr 1-5)":198,"W2 (Apr 6-12)":755,"W3 (Apr 13-19)":542,"W4 (Apr 20-26)":0,"W5 (Apr 27-30)":573}},{"name":"Kneil De Jesus","role":"Team Member","score":3,"isBench":false,"total":1279,"reads":774,"creates":346,"updates":157,"productive":503,"ratio":0.65,"activeDays":16,"estHours":28.4,"avgDailyHrs":1.8,"dailyRate":79.9,"flags":["yellow:Low volume (1,279 actions)","yellow:Read-heavy ratio (0.65x)","yellow:Below-average attendance (16 days)","red:Very low monthly hours (28h est.)"],"summary":"1,279 actions across 16 active days (80/day average). Missing 6 working days in the month is significant. Productive ratio (0.65x) is read-leaning. Days he works show moderate output (57-112 actions/day) but nothing exceptional. Creates (346) are reasonable for his days worked. The main issues are attendance (16/22 days) and daily volume that's well below team average even when present.","weekTotals":{"W1 (Apr 1-5)":9,"W2 (Apr 6-12)":389,"W3 (Apr 13-19)":409,"W4 (Apr 20-26)":293,"W5 (Apr 27-30)":177}},{"name":"Chris Dimaculangan","role":"Department Head","score":3,"isBench":false,"total":1261,"reads":953,"creates":180,"updates":123,"productive":303,"ratio":0.32,"activeDays":19,"estHours":27.9,"avgDailyHrs":1.5,"dailyRate":66.4,"flags":["yellow:Low volume (1,261 actions)","red:Very low productive ratio (0.32x)","red:Very low monthly hours (28h est.)","red:Very few creates (180)"],"summary":"As Department Head, 1,261 actions over 19 active days. Very read-heavy (0.32 ratio) -- 953 reads vs only 180 creates and 123 updates. Several near-zero days (Apr 1: 2, Apr 3: 3, Apr 22: 1). His best days (Apr 14: 220, Apr 6: 189) show he CAN engage deeply. Active days (19) is decent attendance, but many of those days have minimal activity. As dept head, some work happens off-platform, but the CRM footprint is light.","weekTotals":{"W1 (Apr 1-5)":5,"W2 (Apr 6-12)":494,"W3 (Apr 13-19)":443,"W4 (Apr 20-26)":36,"W5 (Apr 27-30)":278}},{"name":"Juan David Valencia","role":"Team Member","score":2,"isBench":false,"total":1186,"reads":859,"creates":249,"updates":73,"productive":322,"ratio":0.37,"activeDays":16,"estHours":26.2,"avgDailyHrs":1.6,"dailyRate":74.1,"flags":["yellow:Low volume (1,186 actions)","red:Very low productive ratio (0.37x)","yellow:Below-average attendance (16 days)","red:Very low monthly hours (26h est.)"],"summary":"Lowest volume on the team at 1,186 actions over 16 active days (74/day). Very read-heavy (0.37 ratio) -- 859 reads vs only 249 creates and 73 updates. One outlier day (Apr 21: 210 actions) shows he CAN produce, but typical days are 50-80 actions. 73 updates for the entire month is concerning -- he's rarely modifying records. Present 16 days but consistently underproducing. Same attendance issue as Kneil but with even lower daily output.","weekTotals":{"W1 (Apr 1-5)":68,"W2 (Apr 6-12)":325,"W3 (Apr 13-19)":48,"W4 (Apr 20-26)":513,"W5 (Apr 27-30)":227}}];
+
+// Compute avgHrsPerWeek for Feb/Mar data
+function computeAvgHrsPerWeek(data, numWeeks) {
+  data.forEach(function(p) {
+    var activeWeeks = 0;
+    if (p.weekTotals) {
+      Object.keys(p.weekTotals).forEach(function(k) { if (p.weekTotals[k] > 0) activeWeeks++; });
+    }
+    p.avgHrsPerWeek = activeWeeks > 0 ? Math.round(p.estHours / activeWeeks * 10) / 10 : 0;
+  });
+}
+computeAvgHrsPerWeek(FEB_DATA, 4);
+computeAvgHrsPerWeek(MAR_DATA, 5);
+
+// Compute for April
+APR_DATA.forEach(function(p) {
+  var activeWeeks = 0;
+  if (p.weekTotals) { Object.keys(p.weekTotals).forEach(function(k) { if (p.weekTotals[k] > 0) activeWeeks++; }); }
+  p.avgHrsPerWeek = activeWeeks > 0 ? Math.round(p.estHours / activeWeeks * 10) / 10 : 0;
 });
-var sorted=P.slice().sort(function(a,b){return b.total-a.total;});
-var names=sorted.map(function(p){return p.name.split(' ').slice(0,2).join(' ');});
-var barC=sorted.map(function(p){return p.isBench?'#3b82f6':p.score>=8?'#22c55e':p.score>=7?'#84cc16':p.score>=5?'#eab308':p.score>=4?'#f97316':'#ef4444';});
-new Chart(document.getElementById('volumeChart'),{
-  type:'bar',
-  data:{labels:names,datasets:[
-    {label:'Reads',data:sorted.map(function(p){return p.reads;}),backgroundColor:'#cbd5e1'},
-    {label:'Creates',data:sorted.map(function(p){return p.creates;}),backgroundColor:'#22c55e'},
-    {label:'Updates',data:sorted.map(function(p){return p.updates;}),backgroundColor:'#3b82f6'}
-  ]},
-  options:{responsive:true,plugins:{legend:{position:'top',labels:{boxWidth:10,font:{size:10}}}},scales:{x:{stacked:true,grid:{display:false},ticks:{font:{size:10},maxRotation:45,minRotation:25}},y:{stacked:true,beginAtZero:true,grid:{color:'#f1f5f9'}}}}
+
+// Build Combined data
+var COMBINED_DATA = [];
+var nameList = FEB_DATA.map(function(p) { return p.name; });
+nameList.forEach(function(name) {
+  var feb = FEB_DATA.find(function(p) { return p.name === name; });
+  var mar = MAR_DATA.find(function(p) { return p.name === name; });
+  var apr = APR_DATA.find(function(p) { return p.name === name; });
+  if (!feb || !mar || !apr) return;
+  var total = feb.total + mar.total + apr.total;
+  var reads = feb.reads + mar.reads + apr.reads;
+  var creates = feb.creates + mar.creates + apr.creates;
+  var updates = feb.updates + mar.updates + apr.updates;
+  var productive = creates + updates;
+  var ratio = reads > 0 ? Math.round(productive / reads * 100) / 100 : 0;
+  var activeDays = feb.activeDays + mar.activeDays + apr.activeDays;
+  var estHours = Math.round((feb.estHours + mar.estHours + apr.estHours) * 10) / 10;
+  var dailyRate = activeDays > 0 ? Math.round(total / activeDays * 10) / 10 : 0;
+  // Combined active weeks: count all weeks across 3 months with activity
+  var allWeeks = 0;
+  [feb, mar, apr].forEach(function(m) {
+    if (m.weekTotals) { Object.keys(m.weekTotals).forEach(function(k) { if (m.weekTotals[k] > 0) allWeeks++; }); }
+  });
+  var avgHrsPerWeek = allWeeks > 0 ? Math.round(estHours / allWeeks * 10) / 10 : 0;
+  COMBINED_DATA.push({
+    name: name, role: feb.role, isBench: feb.isBench,
+    total: total, reads: reads, creates: creates, updates: updates,
+    productive: productive, ratio: ratio, activeDays: activeDays,
+    estHours: estHours, dailyRate: dailyRate, avgHrsPerWeek: avgHrsPerWeek,
+    weekTotals: {}
+  });
 });
-new Chart(document.getElementById('ratioChart'),{
-  type:'bar',
-  data:{labels:names,datasets:[{data:sorted.map(function(p){return p.ratio;}),backgroundColor:barC,borderRadius:4}]},
-  options:{responsive:true,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{font:{size:9},maxRotation:45,minRotation:25}},y:{beginAtZero:true,grid:{color:'#f1f5f9'}}}}
-});
-var hSorted=P.slice().sort(function(a,b){return b.estHours-a.estHours;});
-var hNames=hSorted.map(function(p){return p.name.split(' ').slice(0,2).join(' ');});
-var hColors=hSorted.map(function(p){return p.isBench?'#3b82f6':p.estHours>=120?'#22c55e':p.estHours>=80?'#84cc16':p.estHours>=50?'#f59e0b':'#ef4444';});
-new Chart(document.getElementById('hoursChart'),{
-  type:'bar',
-  data:{labels:hNames,datasets:[{data:hSorted.map(function(p){return p.estHours;}),backgroundColor:hColors,borderRadius:4}]},
-  options:{responsive:true,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{font:{size:9},maxRotation:45,minRotation:25}},y:{beginAtZero:true,grid:{color:'#f1f5f9'},title:{display:true,text:'Hours',font:{size:10}}}}}
-});
-var dSorted=P.slice().sort(function(a,b){return b.activeDays-a.activeDays;});
-var dNames=dSorted.map(function(p){return p.name.split(' ').slice(0,2).join(' ');});
-var dColors=dSorted.map(function(p){return p.isBench?'#3b82f6':p.activeDays>=20?'#22c55e':p.activeDays>=17?'#84cc16':p.activeDays>=15?'#f59e0b':'#ef4444';});
-new Chart(document.getElementById('daysChart'),{
-  type:'bar',
-  data:{labels:dNames,datasets:[{data:dSorted.map(function(p){return p.activeDays;}),backgroundColor:dColors,borderRadius:4}]},
-  options:{responsive:true,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{font:{size:9},maxRotation:45,minRotation:25}},y:{beginAtZero:true,max:25,grid:{color:'#f1f5f9'}}}}
-});
-var rSorted=P.slice().sort(function(a,b){return b.dailyRate-a.dailyRate;});
-var rNames=rSorted.map(function(p){return p.name.split(' ').slice(0,2).join(' ');});
-var rColors=rSorted.map(function(p){return p.isBench?'#3b82f6':p.dailyRate>=300?'#22c55e':p.dailyRate>=200?'#84cc16':p.dailyRate>=100?'#f59e0b':'#ef4444';});
-new Chart(document.getElementById('rateChart'),{
-  type:'bar',
-  data:{labels:rNames,datasets:[{data:rSorted.map(function(p){return p.dailyRate;}),backgroundColor:rColors,borderRadius:4}]},
-  options:{responsive:true,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{font:{size:9},maxRotation:45,minRotation:25}},y:{beginAtZero:true,grid:{color:'#f1f5f9'},title:{display:true,text:'Actions/Day',font:{size:10}}}}}
-});
-P.forEach(function(p){
-  var activeWeeks=0;
-  if(p.weekTotals){Object.keys(p.weekTotals).forEach(function(k){if(p.weekTotals[k]>0)activeWeeks++;});}
-  p.avgHrsPerWeek=activeWeeks>0?Math.round(p.estHours/activeWeeks*10)/10:0;
-});
-var wSorted=P.slice().sort(function(a,b){return b.avgHrsPerWeek-a.avgHrsPerWeek;});
-var wNames=wSorted.map(function(p){return p.name.split(' ').slice(0,2).join(' ');});
-var wColors=wSorted.map(function(p){return p.isBench?'#3b82f6':p.avgHrsPerWeek>=30?'#22c55e':p.avgHrsPerWeek>=20?'#84cc16':p.avgHrsPerWeek>=12?'#f59e0b':'#ef4444';});
-new Chart(document.getElementById('weeklyHrsChart'),{
-  type:'bar',
-  data:{labels:wNames,datasets:[{data:wSorted.map(function(p){return p.avgHrsPerWeek;}),backgroundColor:wColors,borderRadius:4}]},
-  options:{responsive:true,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{font:{size:10},maxRotation:45,minRotation:25}},y:{beginAtZero:true,grid:{color:'#f1f5f9'},title:{display:true,text:'Hrs/Week',font:{size:10}}}}}
-});
-var personEl=document.getElementById('personCards');
-var scoreBg=function(s){return s>=8?'#22c55e':s>=6?'#84cc16':s>=5?'#eab308':s>=4?'#f97316':'#ef4444';};
-var cardOrder=P.slice().sort(function(a,b){
-  if(a.isBench)return -1;if(b.isBench)return 1;
-  return b.score-a.score||(b.total-a.total);
-});
-cardOrder.forEach(function(p){
-  var flagsHtml=(p.flags||[]).map(function(f){var i=f.indexOf(':');return'<span class="flag '+f.substring(0,i)+'">'+f.substring(i+1)+'</span>';}).join('');
-  var prodClass=p.ratio>=1.5?'good':p.ratio>=0.8?'':'warn';
-  if(p.ratio<0.5)prodClass='bad';
-  var hrsClass=p.estHours>=120?'good':p.estHours>=80?'':'warn';
-  if(p.estHours<50)hrsClass='bad';
-  var wkHrsClass=p.avgHrsPerWeek>=30?'good':p.avgHrsPerWeek>=20?'':p.avgHrsPerWeek>=12?'warn':'bad';
-  var wkHtml='';
-  if(p.weekTotals&&Object.keys(p.weekTotals).length>0){
-    var wks=Object.keys(p.weekTotals);
-    var maxW=Math.max.apply(null,wks.map(function(k){return p.weekTotals[k];}));
-    wkHtml='<div style="margin-top:10px"><div style="font-size:9px;color:#94a3b8;margin-bottom:4px;font-weight:600">WEEKLY PATTERN</div><div class="wk-row">';
-    wks.forEach(function(wk){
-      var v=p.weekTotals[wk];
-      var h=maxW>0?Math.max(Math.round(v/maxW*40),2):2;
-      wkHtml+='<div class="wk-bar"><div class="bar" style="height:'+h+'px;background:'+(v===0?'#fecaca':'#3b82f6')+'"></div><div class="wl">'+wk.split(' ')[0]+'</div><div class="wv">'+v+'</div></div>';
-    });
-    wkHtml+='</div></div>';
+
+// Chart instances tracker
+var chartInstances = {};
+
+function destroyCharts(prefix) {
+  Object.keys(chartInstances).forEach(function(key) {
+    if (key.startsWith(prefix)) {
+      chartInstances[key].destroy();
+      delete chartInstances[key];
+    }
+  });
+}
+
+function renderTab(tabId, data, monthLabel, workingDays, hasScores) {
+  var container = document.getElementById('tab-' + tabId);
+  var prefix = tabId + '_';
+
+  // Build HTML
+  var html = '';
+
+  // Score cards row
+  html += '<div class="scores-row" id="' + prefix + 'scoreCards"></div>';
+
+  // Charts
+  html += '<div class="chart-row"><div class="chart-box full"><h3>Monthly CRM Activity Volume - All Team (' + monthLabel + ')</h3><div class="chart-desc"><strong>Reads</strong> = opening/viewing a record (claim, contact, task). <strong>Creates</strong> = adding a new record (note, task, document, email, estimate). <strong>Updates</strong> = modifying an existing record (changing a claim stage, editing fields, updating status). Creates + Updates = productive actions.</div><canvas id="' + prefix + 'volumeChart" height="70"></canvas></div></div>';
+  html += '<div class="chart-row"><div class="chart-box"><h3>Productive/Read Ratio</h3><div class="chart-desc">How many productive actions (creates + updates) per read. Above 1.0 = acting more than browsing. Below 0.5 = mostly just viewing records without taking action.</div><canvas id="' + prefix + 'ratioChart"></canvas></div>';
+  html += '<div class="chart-box"><h3>Estimated Monthly Hours</h3><div class="chart-desc">Total hours estimated from CRM action volume using ~45 actions/hour calibration. Not a time clock &mdash; measures CRM engagement time only.</div><canvas id="' + prefix + 'hoursChart"></canvas></div></div>';
+  html += '<div class="chart-row"><div class="chart-box"><h3>Active Days (of ~' + workingDays + ' working days)</h3><div class="chart-desc">Number of days with at least 1 CRM action logged. Missing days may indicate PTO, field work, or disengagement.</div><canvas id="' + prefix + 'daysChart"></canvas></div>';
+  html += '<div class="chart-box"><h3>Daily Action Rate (avg/active day)</h3><div class="chart-desc">Average total actions per day they were active. Higher = more CRM throughput on working days.</div><canvas id="' + prefix + 'rateChart"></canvas></div></div>';
+  html += '<div class="chart-row"><div class="chart-box full"><h3>Avg Hours per Week per Rep</h3><div class="chart-desc">Estimated monthly hours divided by the number of weeks with activity. Shows weekly CRM workload per rep &mdash; 40h/wk = full-time equivalent.</div><canvas id="' + prefix + 'weeklyHrsChart"></canvas></div></div>';
+
+  // Individual assessments
+  html += '<div class="section-title">Individual Assessments</div>';
+  html += '<div class="chart-desc" style="margin-bottom:12px">Each card shows key metrics. <strong>Total Actions</strong> = all CRM events. <strong>Productive</strong> = creates + updates only. <strong>Prod/Read</strong> = ratio of productive to reads. <strong>Active Days</strong> = days with any CRM activity. <strong>Est. Hours</strong> = estimated CRM time. <strong>Actions/Day</strong> = avg actions on days worked. <strong>Avg Hrs/Wk</strong> = monthly hours / active weeks.</div>';
+  html += '<div id="' + prefix + 'personCards"></div>';
+
+  container.innerHTML = html;
+
+  // Populate score cards
+  var cardsEl = document.getElementById(prefix + 'scoreCards');
+  var sortedByTotal = data.slice().sort(function(a, b) { return b.total - a.total; });
+  sortedByTotal.forEach(function(p) {
+    if (hasScores && p.score !== undefined) {
+      cardsEl.innerHTML += '<div class="sc' + (p.isBench ? ' benchmark' : '') + '"><div class="name">' + p.name.split(' ')[0] + '</div><div class="role">' + p.role + '</div><div class="score s' + p.score + '">' + p.score + '<span class="slash">/10</span></div><div class="hrs">' + p.estHours + 'h &middot; ' + p.total.toLocaleString() + '</div></div>';
+    } else {
+      cardsEl.innerHTML += '<div class="sc' + (p.isBench ? ' benchmark' : '') + '"><div class="name">' + p.name.split(' ')[0] + '</div><div class="role">' + p.role + '</div><div class="hrs" style="margin-top:8px;font-size:11px;font-weight:600">' + p.estHours + 'h &middot; ' + p.total.toLocaleString() + '</div></div>';
+    }
+  });
+
+  // Charts
+  var sorted = data.slice().sort(function(a, b) { return b.total - a.total; });
+  var names = sorted.map(function(p) { return p.name.split(' ').slice(0, 2).join(' '); });
+  var barC = sorted.map(function(p) { return p.isBench ? '#3b82f6' : (hasScores && p.score !== undefined) ? (p.score >= 8 ? '#22c55e' : p.score >= 7 ? '#84cc16' : p.score >= 5 ? '#eab308' : p.score >= 4 ? '#f97316' : '#ef4444') : '#0ea5e9'; });
+
+  chartInstances[prefix + 'volume'] = new Chart(document.getElementById(prefix + 'volumeChart'), {
+    type: 'bar',
+    data: { labels: names, datasets: [
+      { label: 'Reads', data: sorted.map(function(p) { return p.reads; }), backgroundColor: '#cbd5e1' },
+      { label: 'Creates', data: sorted.map(function(p) { return p.creates; }), backgroundColor: '#22c55e' },
+      { label: 'Updates', data: sorted.map(function(p) { return p.updates; }), backgroundColor: '#3b82f6' }
+    ]},
+    options: { responsive: true, plugins: { legend: { position: 'top', labels: { boxWidth: 10, font: { size: 10 } } } }, scales: { x: { stacked: true, grid: { display: false }, ticks: { font: { size: 10 }, maxRotation: 45, minRotation: 25 } }, y: { stacked: true, beginAtZero: true, grid: { color: '#f1f5f9' } } } }
+  });
+
+  chartInstances[prefix + 'ratio'] = new Chart(document.getElementById(prefix + 'ratioChart'), {
+    type: 'bar',
+    data: { labels: names, datasets: [{ data: sorted.map(function(p) { return p.ratio; }), backgroundColor: barC, borderRadius: 4 }] },
+    options: { responsive: true, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false }, ticks: { font: { size: 9 }, maxRotation: 45, minRotation: 25 } }, y: { beginAtZero: true, grid: { color: '#f1f5f9' } } } }
+  });
+
+  var hSorted = data.slice().sort(function(a, b) { return b.estHours - a.estHours; });
+  var hNames = hSorted.map(function(p) { return p.name.split(' ').slice(0, 2).join(' '); });
+  var hColors = hSorted.map(function(p) { return p.isBench ? '#3b82f6' : p.estHours >= 120 ? '#22c55e' : p.estHours >= 80 ? '#84cc16' : p.estHours >= 50 ? '#f59e0b' : '#ef4444'; });
+
+  chartInstances[prefix + 'hours'] = new Chart(document.getElementById(prefix + 'hoursChart'), {
+    type: 'bar',
+    data: { labels: hNames, datasets: [{ data: hSorted.map(function(p) { return p.estHours; }), backgroundColor: hColors, borderRadius: 4 }] },
+    options: { responsive: true, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false }, ticks: { font: { size: 9 }, maxRotation: 45, minRotation: 25 } }, y: { beginAtZero: true, grid: { color: '#f1f5f9' }, title: { display: true, text: 'Hours', font: { size: 10 } } } } }
+  });
+
+  var dSorted = data.slice().sort(function(a, b) { return b.activeDays - a.activeDays; });
+  var dNames = dSorted.map(function(p) { return p.name.split(' ').slice(0, 2).join(' '); });
+  var dColors = dSorted.map(function(p) { return p.isBench ? '#3b82f6' : p.activeDays >= 20 ? '#22c55e' : p.activeDays >= 17 ? '#84cc16' : p.activeDays >= 15 ? '#f59e0b' : '#ef4444'; });
+
+  chartInstances[prefix + 'days'] = new Chart(document.getElementById(prefix + 'daysChart'), {
+    type: 'bar',
+    data: { labels: dNames, datasets: [{ data: dSorted.map(function(p) { return p.activeDays; }), backgroundColor: dColors, borderRadius: 4 }] },
+    options: { responsive: true, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false }, ticks: { font: { size: 9 }, maxRotation: 45, minRotation: 25 } }, y: { beginAtZero: true, grid: { color: '#f1f5f9' } } } }
+  });
+
+  var rSorted = data.slice().sort(function(a, b) { return b.dailyRate - a.dailyRate; });
+  var rNames = rSorted.map(function(p) { return p.name.split(' ').slice(0, 2).join(' '); });
+  var rColors = rSorted.map(function(p) { return p.isBench ? '#3b82f6' : p.dailyRate >= 300 ? '#22c55e' : p.dailyRate >= 200 ? '#84cc16' : p.dailyRate >= 100 ? '#f59e0b' : '#ef4444'; });
+
+  chartInstances[prefix + 'rate'] = new Chart(document.getElementById(prefix + 'rateChart'), {
+    type: 'bar',
+    data: { labels: rNames, datasets: [{ data: rSorted.map(function(p) { return p.dailyRate; }), backgroundColor: rColors, borderRadius: 4 }] },
+    options: { responsive: true, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false }, ticks: { font: { size: 9 }, maxRotation: 45, minRotation: 25 } }, y: { beginAtZero: true, grid: { color: '#f1f5f9' }, title: { display: true, text: 'Actions/Day', font: { size: 10 } } } } }
+  });
+
+  var wSorted = data.slice().sort(function(a, b) { return b.avgHrsPerWeek - a.avgHrsPerWeek; });
+  var wNames = wSorted.map(function(p) { return p.name.split(' ').slice(0, 2).join(' '); });
+  var wColors = wSorted.map(function(p) { return p.isBench ? '#3b82f6' : p.avgHrsPerWeek >= 30 ? '#22c55e' : p.avgHrsPerWeek >= 20 ? '#84cc16' : p.avgHrsPerWeek >= 12 ? '#f59e0b' : '#ef4444'; });
+
+  chartInstances[prefix + 'weekly'] = new Chart(document.getElementById(prefix + 'weeklyHrsChart'), {
+    type: 'bar',
+    data: { labels: wNames, datasets: [{ data: wSorted.map(function(p) { return p.avgHrsPerWeek; }), backgroundColor: wColors, borderRadius: 4 }] },
+    options: { responsive: true, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false }, ticks: { font: { size: 10 }, maxRotation: 45, minRotation: 25 } }, y: { beginAtZero: true, grid: { color: '#f1f5f9' }, title: { display: true, text: 'Hrs/Week', font: { size: 10 } } } } }
+  });
+
+  // Person cards
+  var personEl = document.getElementById(prefix + 'personCards');
+  var scoreBg = function(s) { return s >= 8 ? '#22c55e' : s >= 6 ? '#84cc16' : s >= 5 ? '#eab308' : s >= 4 ? '#f97316' : '#ef4444'; };
+  var cardOrder = data.slice().sort(function(a, b) {
+    if (a.isBench) return -1; if (b.isBench) return 1;
+    return b.total - a.total;
+  });
+
+  cardOrder.forEach(function(p) {
+    var prodClass = p.ratio >= 1.5 ? 'good' : p.ratio >= 0.8 ? '' : 'warn';
+    if (p.ratio < 0.5) prodClass = 'bad';
+    var hrsClass = p.estHours >= 120 ? 'good' : p.estHours >= 80 ? '' : 'warn';
+    if (p.estHours < 50) hrsClass = 'bad';
+    var wkHrsClass = p.avgHrsPerWeek >= 30 ? 'good' : p.avgHrsPerWeek >= 20 ? '' : p.avgHrsPerWeek >= 12 ? 'warn' : 'bad';
+
+    var headerHtml = '';
+    if (hasScores && p.score !== undefined) {
+      headerHtml = '<div class="pa-header"><div class="pa-score" style="background:' + scoreBg(p.score) + '">' + p.score + '</div><div class="pa-info"><h3>' + p.name + '</h3><div class="pa-role">' + p.role + '</div>' + (p.summary ? '<div class="pa-summary">' + p.summary + '</div>' : '') + '</div></div>';
+    } else {
+      headerHtml = '<div class="pa-header"><div class="pa-info"><h3>' + p.name + '</h3><div class="pa-role">' + p.role + '</div></div></div>';
+    }
+
+    var flagsHtml = '';
+    if (hasScores && p.flags && p.flags.length > 0) {
+      flagsHtml = '<div class="flags">' + p.flags.map(function(f) { var i = f.indexOf(':'); return '<span class="flag ' + f.substring(0, i) + '">' + f.substring(i + 1) + '</span>'; }).join('') + '</div>';
+    }
+
+    var wkHtml = '';
+    if (p.weekTotals && Object.keys(p.weekTotals).length > 0) {
+      var wks = Object.keys(p.weekTotals);
+      var maxW = Math.max.apply(null, wks.map(function(k) { return p.weekTotals[k]; }));
+      wkHtml = '<div style="margin-top:10px"><div style="font-size:9px;color:#94a3b8;margin-bottom:4px;font-weight:600">WEEKLY PATTERN</div><div class="wk-row">';
+      wks.forEach(function(wk) {
+        var v = p.weekTotals[wk];
+        var h = maxW > 0 ? Math.max(Math.round(v / maxW * 40), 2) : 2;
+        wkHtml += '<div class="wk-bar"><div class="bar" style="height:' + h + 'px;background:' + (v === 0 ? '#fecaca' : '#3b82f6') + '"></div><div class="wl">' + wk.split(' ')[0] + '</div><div class="wv">' + v + '</div></div>';
+      });
+      wkHtml += '</div></div>';
+    }
+
+    personEl.innerHTML += '<div class="person-audit' + (p.isBench ? ' bcard' : '') + '">' + headerHtml + '<div class="mg"><div class="metric"><div class="mv">' + p.total.toLocaleString() + '</div><div class="ml">Total Actions</div></div><div class="metric ' + (p.productive >= 2400 ? 'good' : p.productive >= 1000 ? '' : 'bad') + '"><div class="mv">' + p.productive.toLocaleString() + '</div><div class="ml">Productive</div></div><div class="metric ' + prodClass + '"><div class="mv">' + p.ratio + 'x</div><div class="ml">Prod/Read</div></div><div class="metric"><div class="mv">' + p.activeDays + '</div><div class="ml">Active Days</div></div><div class="metric ' + hrsClass + '"><div class="mv">' + p.estHours + 'h</div><div class="ml">Est. Hours</div></div><div class="metric"><div class="mv">' + p.dailyRate + '</div><div class="ml">Actions/Day</div></div><div class="metric ' + wkHrsClass + '"><div class="mv">' + p.avgHrsPerWeek + 'h</div><div class="ml">Avg Hrs/Wk</div></div></div>' + flagsHtml + wkHtml + '</div>';
+  });
+}
+
+var currentTab = 'feb';
+var rendered = {};
+
+function switchTab(tabId) {
+  // Hide all tabs
+  document.querySelectorAll('.tab-content').forEach(function(el) { el.classList.remove('active'); });
+  document.querySelectorAll('.tab-bar button').forEach(function(el) { el.classList.remove('active'); });
+
+  // Show selected
+  document.getElementById('tab-' + tabId).classList.add('active');
+  var btns = document.querySelectorAll('.tab-bar button');
+  var idx = { feb: 0, mar: 1, apr: 2, combined: 3 }[tabId];
+  btns[idx].classList.add('active');
+
+  // Destroy old charts if re-rendering
+  if (rendered[tabId]) {
+    destroyCharts(tabId + '_');
+    document.getElementById('tab-' + tabId).innerHTML = '';
+    rendered[tabId] = false;
   }
-  personEl.innerHTML+='<div class="person-audit'+(p.isBench?' bcard':'')+'"><div class="pa-header"><div class="pa-score" style="background:'+scoreBg(p.score)+'">'+p.score+'</div><div class="pa-info"><h3>'+p.name+'</h3><div class="pa-role">'+p.role+'</div><div class="pa-summary">'+p.summary+'</div></div></div><div class="mg"><div class="metric"><div class="mv">'+p.total.toLocaleString()+'</div><div class="ml">Total Actions</div></div><div class="metric '+(p.productive>=2400?'good':p.productive>=1000?'':'bad')+'"><div class="mv">'+p.productive.toLocaleString()+'</div><div class="ml">Productive</div></div><div class="metric '+prodClass+'"><div class="mv">'+p.ratio+'x</div><div class="ml">Prod/Read</div></div><div class="metric"><div class="mv">'+p.activeDays+'</div><div class="ml">Active Days</div></div><div class="metric '+hrsClass+'"><div class="mv">'+p.estHours+'h</div><div class="ml">Est. Hours</div></div><div class="metric"><div class="mv">'+p.dailyRate+'</div><div class="ml">Actions/Day</div></div><div class="metric '+wkHrsClass+'"><div class="mv">'+p.avgHrsPerWeek+'h</div><div class="ml">Avg Hrs/Wk</div></div></div><div class="flags">'+flagsHtml+'</div>'+wkHtml+'</div>';
-});
+
+  // Render
+  if (!rendered[tabId]) {
+    if (tabId === 'feb') renderTab('feb', FEB_DATA, 'February 2026', 20, false);
+    else if (tabId === 'mar') renderTab('mar', MAR_DATA, 'March 2026', 21, false);
+    else if (tabId === 'apr') renderTab('apr', APR_DATA, 'April 2026', 22, true);
+    else if (tabId === 'combined') renderTab('combined', COMBINED_DATA, 'Combined FebâApr 2026', 63, false);
+    rendered[tabId] = true;
+  }
+
+  currentTab = tabId;
+}
+
+// Initial render
+switchTab('feb');
 </script>
 </body>
 </html>
