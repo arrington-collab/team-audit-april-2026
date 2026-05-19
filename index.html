@@ -13,7 +13,7 @@
 <h1>ClaimsForce Weekly Team Activity</h1>
 <p class="subtitle">May 11 – 17, 2026 · 14 Team Members · Activity Log Data</p>
 <div id="team-grid" class="team-grid"></div>
-<div class="benchmark-note"><strong>Benchmark Note:</strong> Ashley Sacramento is the 5/10 midpoint. Hours estimated from action volume (~45 actions/hr calibration). Chris (Head of Claims Mgmt), Kneil, Yane, and Juan David (Senior Claims Analysts) evaluated with role context. Juan David, Yane, and Chris D receive +2.5 hrs/day managerial credit for non-CRM supervisory work.</div>
+<div class="benchmark-note"><strong>Benchmark Note:</strong> Ashley Sacramento is the 5/10 midpoint. Hours estimated from action volume (~45 actions/hr calibration). Chris (Head of Claims Mgmt), Kneil, Yane, and Juan David (Senior Claims Analysts) evaluated with role context. Juan David, Yane, Kneil, and Chris D receive +2.5 hrs/day managerial credit for non-CRM supervisory work.</div>
 <div class="charts-row"><div class="chart-box"><h3>Total Volume by Type</h3><canvas id="volumeChart"></canvas></div><div class="chart-box"><h3>Productive Ratio</h3><canvas id="ratioChart"></canvas></div></div>
 <div class="charts-row"><div class="chart-box"><h3>Estimated Hours (incl. managerial credit)</h3><canvas id="hoursChart"></canvas></div><div class="chart-box"><h3>Active Days</h3><canvas id="daysChart"></canvas></div></div>
 <div id="detail-grid" class="detail-grid"></div>
@@ -32,7 +32,7 @@ const teamData=[
 {name:"Yane Vacca",role:"Senior Claims Analyst",total:1113,reads:758,creates:187,updates:167,productive:354,ratio:0.47,activeDays:5,dailyRate:222.6,estHours:24.7,mgmt:true,daily:{"05-11":{r:193,c:99,u:90},"05-12":{r:93,c:17,u:16},"05-13":{r:186,c:29,u:38},"05-14":{r:187,c:13,u:12},"05-15":{r:99,c:29,u:11}}},
 {name:"Juan David Valencia",role:"Senior Claims Analyst",total:739,reads:649,creates:2,updates:88,productive:90,ratio:0.14,activeDays:5,dailyRate:147.8,estHours:16.4,mgmt:true,daily:{"05-11":{r:90,c:0,u:3},"05-12":{r:101,c:1,u:0},"05-13":{r:119,c:1,u:2},"05-14":{r:187,c:0,u:51},"05-15":{r:152,c:0,u:32}}},
 {name:"Chris Dimaculangan",role:"Head of Claims Mgmt",total:772,reads:564,creates:78,updates:120,productive:198,ratio:0.35,activeDays:5,dailyRate:154.4,estHours:17.2,mgmt:true,daily:{"05-11":{r:150,c:33,u:57},"05-12":{r:119,c:13,u:18},"05-13":{r:73,c:10,u:4},"05-14":{r:77,c:7,u:5},"05-15":{r:145,c:15,u:36}}},
-{name:"Kneil De Jesus",role:"Senior Claims Analyst",total:802,reads:470,creates:212,updates:115,productive:327,ratio:0.70,activeDays:5,dailyRate:160.4,estHours:17.8,daily:{"05-11":{r:103,c:66,u:69},"05-12":{r:68,c:30,u:8},"05-13":{r:84,c:33,u:7},"05-14":{r:98,c:27,u:14},"05-15":{r:117,c:56,u:17}}}
+{name:"Kneil De Jesus",role:"Senior Claims Analyst",total:802,reads:470,creates:212,updates:115,productive:327,ratio:0.70,activeDays:5,dailyRate:160.4,estHours:17.8,mgmt:true,daily:{"05-11":{r:103,c:66,u:69},"05-12":{r:68,c:30,u:8},"05-13":{r:84,c:33,u:7},"05-14":{r:98,c:27,u:14},"05-15":{r:117,c:56,u:17}}}
 ];
 teamData.forEach(m=>{m.mgmtHours=m.mgmt?(2.5*m.activeDays):0;m.totalHours=parseFloat(m.estHours)+m.mgmtHours});
 const benchmarkTotal=teamData[7].total;
