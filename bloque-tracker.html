@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bloque Estimating Tracker</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js"></script>
+<style>
+:root { --bg: #0f1117; --card: #1a1d27; --border: #2a2d3a; --text: #e4e4e7; --muted: #71717a; --accent: #3b82f6; --green: #22c55e; --orange: #f59e0b; --red: #ef4444; --purple: #a855f7; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); padding: 20px; }
+.header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 24px; flex-wrap: wrap; gap: 8px; }
+h1 { font-size: 1.6em; font-weight: 700; }
+.subtitle { color: var(--muted); font-size: 0.85em; }
+.grid { display: grid; gap: 16px; margin-bottom: 24px; }
+.grid-4 { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+.grid-2 { grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+.card h3 { font-size: 0.8em; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.metric { font-size: 2.2em; font-weight: 700; }
+.metric-sm { font-size: 0.85em; color: var(--muted); margin-top: 4px; }
+.blue { color: var(--accent); }
+.green { color: var(--green); }
+.orange { color: var(--orange); }
+.red { color: var(--red); }
+.purple { color: var(--purple); }
+.section-title { font-size: 1.1em; font-weight: 600; margin: 28px 0 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+.chart-container { position: relative; height: 280px; }
+table { width: 100%; border-collapse: collapse; font-size: 0.85em; }
+th { text-align: left; padding: 10px 12px; color: var(--muted); font-weight: 600; text-transform: uppercase; font-size: 0.75em; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); }
+td { padding: 10px 12px; border-bottom: 1px solid var(--border); }
+tr:hover { background: rgba(59,130,246,0.05); }
+.tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.75em; font-weight: 600; }
+.tag-blue { background: rgba(59,130,246,0.15); color: #60a5fa; }
+.tag-green { background: rgba(34,197,94,0.15); color: #4ade80; }
+.tag-orange { background: rgba(245,158,11,0.15); color: #fbbf24; }
+.tag-red { background: rgba(239,68,68,0.15); color: #f87171; }
+.tag-purple { background: rgba(168,85,247,0.15); color: #c084fc; }
+.tag-gray { background: rgba(113,113,122,0.15); color: #a1a1aa; }
+.pipeline-bar { display: flex; gap: 2px; height: 32px; border-radius: 6px; overflow: hidden; margin: 8px 0; }
+.pipeline-segment { display: flex; align-items: center; justify-content: center; font-size: 0.7em; font-weight: 700; color: #fff; min-width: 24px; transition: all 0.3s; }
+.pipeline-segment:hover { opacity: 0.8; }
+.pipeline-legend { display: flex; flex-wrap: wrap; gap: 12px; font-size: 0.75em; color: var(--muted); margin-top: 8px; }
+.legend-dot { width: 10px; height: 10px; border-radius: 2px; display: inline-block; margin-right: 4px; vertical-align: middle; }
+.money { font-variant-numeric: tabular-nums; }
+.pos { color: var(--green); }
+.neg { color: var(--red); }
+.updated { font-size: 0.7em; color: var(--muted); text-align: right; margin-top: 16px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <h1>Bloque Estimating Tracker</h1>
+    <div class="subtitle">Weekly pipeline flow, timing & financial metrics</div>
+  </div>
+  <div class="subtitle">Last 4 Weeks</div>
+</div>
+
+<!-- KPI Cards -->
+<div class="grid grid-4">
+  <div class="card">
+    <h3>Entered Estimate Request</h3>
+    <div class="metric blue" id="kpi-est-req">14</div>
+    <div class="metric-sm">Last 4 weeks</div>
+  </div>
+  <div class="card">
+    <h3>Reached Estimate Complete</h3>
+    <div class="metric green" id="kpi-est-complete">4</div>
+    <div class="metric-sm">Last 4 weeks</div>
+  </div>
+  <div class="card">
+    <h3>Avg Est Request â Review</h3>
+    <div class="metric orange" id="kpi-timing-er">2.4d</div>
+    <div class="metric-sm">4 samples</div>
+  </div>
+  <div class="card">
+    <h3>Avg Review â In Negotiations</h3>
+    <div class="metric purple" id="kpi-timing-neg">12d</div>
+    <div class="metric-sm">12 samples</div>
+  </div>
+</div>
+
+<!-- Pipeline Snapshot -->
+<div class="section-title">Current Estimate Pipeline</div>
+<div class="card">
+  <div class="pipeline-bar" id="pipeline-bar"></div>
+  <div class="pipeline-legend" id="pipeline-legend"></div>
+  <div style="margin-top: 16px; overflow-x: auto;">
+    <table id="pipeline-table">
+      <thead>
+        <tr><th>Stage</th><th style="text-align:right">Count</th><th style="text-align:right">Total RCV</th><th style="text-align:right">Total Requested</th><th style="text-align:right">Adj RCV</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Weekly Charts -->
+<div class="section-title">Weekly Trends</div>
+<div class="grid grid-2">
+  <div class="card">
+    <h3>Pipeline Flow by Week</h3>
+    <div class="chart-container"><canvas id="flowChart"></canvas></div>
+  </div>
+  <div class="card">
+    <h3>Stage Transitions by Week</h3>
+    <div class="chart-container"><canvas id="transChart"></canvas></div>
+  </div>
+</div>
+
+<!-- Estimate Complete Detail -->
+<div class="section-title">Estimate Complete â Financial Detail (Last 4 Weeks)</div>
+<div class="card" style="overflow-x: auto;">
+  <table id="complete-table">
+    <thead>
+      <tr><th>Client</th><th>Completed</th><th>Insurance</th><th style="text-align:right">Original RCV</th><th style="text-align:right">Supplements</th><th style="text-align:right">Adjusted RCV</th><th style="text-align:right">Increase</th><th>Estimator</th></tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+<!-- Top In Negotiations -->
+<div class="section-title">In Negotiations â Largest Active Claims</div>
+<div class="card" style="overflow-x: auto;">
+  <table id="neg-table">
+    <thead>
+      <tr><th>Client</th><th>Insurance</th><th style="text-align:right">Original RCV</th><th style="text-align:right">Requested</th><th style="text-align:right">Supplements</th><th style="text-align:right">Adj RCV</th><th style="text-align:right">Increase</th><th>Estimator</th></tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+<div class="updated" id="updated-text"></div>
+
+<script>
+// ============ DATA ============
+const DATA = {
+  lastUpdated: "2026-05-20T15:00:00",
+
+  weeklyFlow: {
+    "4/20": { toEstReq: 5, toAssigned: 0, toEstComplete: 3, toInNeg: 0, totalChanges: 46 },
+    "4/27": { toEstReq: 2, toAssigned: 1, toEstComplete: 1, toInNeg: 7, totalChanges: 43 },
+    "5/4":  { toEstReq: 1, toAssigned: 0, toEstComplete: 0, toInNeg: 2, totalChanges: 27 },
+    "5/11": { toEstReq: 5, toAssigned: 0, toEstComplete: 0, toInNeg: 12, totalChanges: 41 },
+    "5/18": { toEstReq: 1, toAssigned: 0, toEstComplete: 0, toInNeg: 1, totalChanges: 19 }
+  },
+
+  transitionCounts: [
+    {t:"Lead â Opportunity", n:38}, {t:"Opportunity â Opp Won", n:33},
+    {t:"Est Request â Est Review", n:9}, {t:"Est Review â In Negotiations", n:13},
+    {t:"Est Request â In Negotiations", n:7}, {t:"In Negotiations â Est Complete", n:2},
+    {t:"Opp Won â Est Request", n:10}, {t:"In Negotiations â Opp Won", n:9},
+    {t:"Lead â Opp Lost", n:13}, {t:"Opportunity â Opp Lost", n:12}
+  ],
+
+  pipeline: [
+    {stage:"Estimate Request", count:9, totalRCV:32613, totalRequested:7348, adjRCV:0, color:"#3b82f6"},
+    {stage:"Assigned", count:5, totalRCV:86017, totalRequested:118216, adjRCV:26392, color:"#8b5cf6"},
+    {stage:"Estimate Review", count:1, totalRCV:1708, totalRequested:3829, adjRCV:0, color:"#06b6d4"},
+    {stage:"In Negotiations", count:140, totalRCV:450707, totalRequested:2085324, adjRCV:254088, color:"#f59e0b"},
+    {stage:"Review 1st Est", count:5, totalRCV:49035, totalRequested:59019, adjRCV:4475, color:"#ec4899"},
+    {stage:"Additional Supps", count:5, totalRCV:75953, totalRequested:94627, adjRCV:19954, color:"#f97316"},
+    {stage:"Need Assistance", count:32, totalRCV:48072, totalRequested:345804, adjRCV:19382, color:"#ef4444"},
+    {stage:"Estimate Complete", count:19, totalRCV:121947, totalRequested:211687, adjRCV:22120, color:"#22c55e"}
+  ],
+
+  timing: {
+    estReqToReview: { avg: 2.4, samples: 4 },
+    reviewToNeg: { avg: 12, samples: 12 },
+    estReqToNeg: { avg: 8, samples: 8 }
+  },
+
+  estCompleteClients: [
+    {name:"Renee Jonovich", date:"4/22", ins:"Travelers", rcv:1254.31, supps:224.83, adjRCV:1479.14, increase:224.83, estimator:"Nel David"},
+    {name:"Eldelmis Ampudia Leyva", date:"4/22", ins:"Allstate", rcv:2517.28, supps:0, adjRCV:0, increase:null, estimator:"Isaac Robinson"},
+    {name:"William Poynter", date:"4/23", ins:"â", rcv:0, supps:0, adjRCV:0, increase:null, estimator:"Isaac Robinson"},
+    {name:"Kurt Johnson", date:"5/1", ins:"â", rcv:0, supps:0, adjRCV:0, increase:null, estimator:"Nel David"}
+  ],
+
+  topInNeg: [
+    {name:"Kevin Richardson", ins:"", rcv:48206.38, requested:55796.02, supps:0, adjRCV:0, increase:null, estimator:""},
+    {name:"Alexander Freeman", ins:"", rcv:40348.09, requested:87855.29, supps:21822.90, adjRCV:62533.52, increase:22185.43, estimator:""},
+    {name:"Heather Potter", ins:"", rcv:38395.73, requested:46962.97, supps:0, adjRCV:0, increase:null, estimator:""},
+    {name:"Sophia Ogburn", ins:"", rcv:34374.46, requested:68729.37, supps:20382.67, adjRCV:54757.13, increase:20382.67, estimator:""},
+    {name:"Joe West", ins:"", rcv:33593.13, requested:67200.98, supps:0, adjRCV:0, increase:null, estimator:""},
+    {name:"Amber Gallo", ins:"", rcv:20854.04, requested:28193.54, supps:0, adjRCV:0, increase:null, estimator:""},
+    {name:"Tiffani Woodruff", ins:"", rcv:18717.02, requested:26095.01, supps:14175.31, adjRCV:32892.33, increase:14175.31, estimator:""},
+    {name:"Diana Nunez", ins:"", rcv:16773.51, requested:23756.88, supps:11419.07, adjRCV:28192.58, increase:11419.07, estimator:""}
+  ]
+};
+
+// ============ RENDER ============
+const fmt = n => n == null ? 'â' : '$' + n.toLocaleString('en-US', {minimumFractionDigits:0, maximumFractionDigits:0});
+const fmtD = n => n == null ? 'â' : '$' + n.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
+
+// Pipeline bar
+const totalPipeline = DATA.pipeline.reduce((s, p) => s + p.count, 0);
+const bar = document.getElementById('pipeline-bar');
+const legend = document.getElementById('pipeline-legend');
+DATA.pipeline.forEach(p => {
+  const pct = (p.count / totalPipeline * 100);
+  if (pct > 0) {
+    const seg = document.createElement('div');
+    seg.className = 'pipeline-segment';
+    seg.style.width = Math.max(pct, 3) + '%';
+    seg.style.background = p.color;
+    seg.textContent = p.count;
+    seg.title = p.stage + ': ' + p.count;
+    bar.appendChild(seg);
+  }
+  const item = document.createElement('span');
+  item.innerHTML = '<span class="legend-dot" style="background:' + p.color + '"></span>' + p.stage + ' (' + p.count + ')';
+  legend.appendChild(item);
+});
+
+// Pipeline table
+const ptbody = document.querySelector('#pipeline-table tbody');
+DATA.pipeline.forEach(p => {
+  const tr = document.createElement('tr');
+  tr.innerHTML = '<td><span class="legend-dot" style="background:' + p.color + '"></span> ' + p.stage + '</td>' +
+    '<td style="text-align:right;font-weight:600">' + p.count + '</td>' +
+    '<td style="text-align:right" class="money">' + fmt(p.totalRCV) + '</td>' +
+    '<td style="text-align:right" class="money">' + fmt(p.totalRequested) + '</td>' +
+    '<td style="text-align:right" class="money">' + fmt(p.adjRCV) + '</td>';
+  ptbody.appendChild(tr);
+});
+// Total row
+const totalRow = document.createElement('tr');
+totalRow.style.fontWeight = '700';
+totalRow.style.borderTop = '2px solid var(--border)';
+totalRow.innerHTML = '<td>Total</td><td style="text-align:right">' + totalPipeline + '</td>' +
+  '<td style="text-align:right" class="money">' + fmt(DATA.pipeline.reduce((s,p)=>s+p.totalRCV,0)) + '</td>' +
+  '<td style="text-align:right" class="money">' + fmt(DATA.pipeline.reduce((s,p)=>s+p.totalRequested,0)) + '</td>' +
+  '<td style="text-align:right" class="money">' + fmt(DATA.pipeline.reduce((s,p)=>s+p.adjRCV,0)) + '</td>';
+ptbody.appendChild(totalRow);
+
+// Weekly flow chart
+const weeks = Object.keys(DATA.weeklyFlow);
+new Chart(document.getElementById('flowChart'), {
+  type: 'bar',
+  data: {
+    labels: weeks.map(w => 'Wk ' + w),
+    datasets: [
+      { label: 'To Est Request', data: weeks.map(w => DATA.weeklyFlow[w].toEstReq), backgroundColor: '#3b82f6' },
+      { label: 'To In Negotiations', data: weeks.map(w => DATA.weeklyFlow[w].toInNeg), backgroundColor: '#f59e0b' },
+      { label: 'To Est Complete', data: weeks.map(w => DATA.weeklyFlow[w].toEstComplete), backgroundColor: '#22c55e' }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: 'top', labels: { color: '#a1a1aa', font: { size: 11 } } } },
+    scales: {
+      x: { ticks: { color: '#71717a' }, grid: { color: '#2a2d3a' } },
+      y: { beginAtZero: true, ticks: { color: '#71717a', stepSize: 1 }, grid: { color: '#2a2d3a' } }
+    }
+  }
+});
+
+// Transitions chart
+const topTrans = DATA.transitionCounts.slice(0, 8);
+new Chart(document.getElementById('transChart'), {
+  type: 'bar',
+  data: {
+    labels: topTrans.map(t => t.t),
+    datasets: [{ label: 'Count', data: topTrans.map(t => t.n), backgroundColor: ['#3b82f6','#22c55e','#06b6d4','#f59e0b','#8b5cf6','#a855f7','#ec4899','#f97316'] }]
+  },
+  options: {
+    indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { beginAtZero: true, ticks: { color: '#71717a', stepSize: 5 }, grid: { color: '#2a2d3a' } },
+      y: { ticks: { color: '#a1a1aa', font: { size: 10 } }, grid: { display: false } }
+    }
+  }
+});
+
+// Estimate Complete table
+const ctbody = document.querySelector('#complete-table tbody');
+let totalIncrease = 0, increaseCount = 0;
+DATA.estCompleteClients.forEach(c => {
+  if (c.increase) { totalIncrease += c.increase; increaseCount++; }
+  const tr = document.createElement('tr');
+  tr.innerHTML = '<td>' + c.name + '</td><td>' + c.date + '</td><td>' + (c.ins || 'â') + '</td>' +
+    '<td style="text-align:right" class="money">' + fmtD(c.rcv) + '</td>' +
+    '<td style="text-align:right" class="money">' + fmtD(c.supps) + '</td>' +
+    '<td style="text-align:right" class="money">' + fmtD(c.adjRCV) + '</td>' +
+    '<td style="text-align:right" class="money ' + (c.increase > 0 ? 'pos' : '') + '">' + (c.increase ? '+' + fmtD(c.increase) : 'â') + '</td>' +
+    '<td>' + c.estimator + '</td>';
+  ctbody.appendChild(tr);
+});
+// Avg row
+if (increaseCount > 0) {
+  const avgRow = document.createElement('tr');
+  avgRow.style.fontWeight = '700';
+  avgRow.style.borderTop = '2px solid var(--border)';
+  const avgRCV = DATA.estCompleteClients.filter(c => c.adjRCV > 0).reduce((s,c) => s + c.adjRCV, 0) / DATA.estCompleteClients.filter(c => c.adjRCV > 0).length;
+  avgRow.innerHTML = '<td colspan="3">Averages (' + DATA.estCompleteClients.length + ' clients)</td>' +
+    '<td style="text-align:right" class="money">â</td><td style="text-align:right" class="money">â</td>' +
+    '<td style="text-align:right" class="money">' + fmtD(avgRCV) + '</td>' +
+    '<td style="text-align:right" class="money pos">+' + fmtD(totalIncrease / increaseCount) + '</td><td></td>';
+  ctbody.appendChild(avgRow);
+}
+
+// Top In Negotiations table
+const ntbody = document.querySelector('#neg-table tbody');
+DATA.topInNeg.forEach(c => {
+  const tr = document.createElement('tr');
+  tr.innerHTML = '<td>' + c.name + '</td><td>' + (c.ins || 'â') + '</td>' +
+    '<td style="text-align:right" class="money">' + fmtD(c.rcv) + '</td>' +
+    '<td style="text-align:right" class="money">' + fmtD(c.requested) + '</td>' +
+    '<td style="text-align:right" class="money">' + fmtD(c.supps) + '</td>' +
+    '<td style="text-align:right" class="money">' + fmtD(c.adjRCV) + '</td>' +
+    '<td style="text-align:right" class="money ' + (c.increase > 0 ? 'pos' : '') + '">' + (c.increase ? '+' + fmtD(c.increase) : 'â') + '</td>' +
+    '<td>' + c.estimator + '</td>';
+  ntbody.appendChild(tr);
+});
+
+// Updated text
+const d = new Date(DATA.lastUpdated);
+document.getElementById('updated-text').textContent = 'Last updated: ' + d.toLocaleString('en-US', { weekday:'short', month:'short', day:'numeric', hour:'numeric', minute:'2-digit' });
+</script>
+</body>
+</html>
