@@ -71,14 +71,9 @@ tr:hover { background: rgba(59,130,246,0.05); }
     <div class="metric-sm">Last 4 weeks</div>
   </div>
   <div class="card">
-    <h3>Avg Est Request &rarr; Review</h3>
-    <div class="metric orange" id="kpi-timing-er">2.4d</div>
-    <div class="metric-sm">4 samples</div>
-  </div>
-  <div class="card">
-    <h3>Avg Review &rarr; In Negotiations</h3>
-    <div class="metric purple" id="kpi-timing-neg">12d</div>
-    <div class="metric-sm">12 samples</div>
+    <h3>Avg Est Request &rarr; Assigned</h3>
+    <div class="metric orange" id="kpi-timing-assign">57d</div>
+    <div class="metric-sm">1 sample</div>
   </div>
 </div>
 
@@ -167,8 +162,7 @@ const DATA = {
   ],
 
   timing: {
-    estReqToReview: { avg: 2.4, samples: 4 },
-    reviewToNeg: { avg: 12, samples: 12 },
+    estReqToAssigned: { avg: 57, samples: 1 },
     estReqToNeg: { avg: 8, samples: 8 }
   },
 
