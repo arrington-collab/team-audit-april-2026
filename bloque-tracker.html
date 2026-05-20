@@ -71,12 +71,12 @@ tr:hover { background: rgba(59,130,246,0.05); }
     <div class="metric-sm">Last 4 weeks</div>
   </div>
   <div class="card">
-    <h3>Avg Est Request â Review</h3>
+    <h3>Avg Est Request &rarr; Review</h3>
     <div class="metric orange" id="kpi-timing-er">2.4d</div>
     <div class="metric-sm">4 samples</div>
   </div>
   <div class="card">
-    <h3>Avg Review â In Negotiations</h3>
+    <h3>Avg Review &rarr; In Negotiations</h3>
     <div class="metric purple" id="kpi-timing-neg">12d</div>
     <div class="metric-sm">12 samples</div>
   </div>
@@ -111,7 +111,7 @@ tr:hover { background: rgba(59,130,246,0.05); }
 </div>
 
 <!-- Estimate Complete Detail -->
-<div class="section-title">Estimate Complete â Financial Detail (Last 4 Weeks)</div>
+<div class="section-title">Estimate Complete &mdash; Financial Detail (Last 4 Weeks)</div>
 <div class="card" style="overflow-x: auto;">
   <table id="complete-table">
     <thead>
@@ -122,7 +122,7 @@ tr:hover { background: rgba(59,130,246,0.05); }
 </div>
 
 <!-- Top In Negotiations -->
-<div class="section-title">In Negotiations â Largest Active Claims</div>
+<div class="section-title">In Negotiations &mdash; Largest Active Claims</div>
 <div class="card" style="overflow-x: auto;">
   <table id="neg-table">
     <thead>
@@ -148,11 +148,11 @@ const DATA = {
   },
 
   transitionCounts: [
-    {t:"Lead â Opportunity", n:38}, {t:"Opportunity â Opp Won", n:33},
-    {t:"Est Request â Est Review", n:9}, {t:"Est Review â In Negotiations", n:13},
-    {t:"Est Request â In Negotiations", n:7}, {t:"In Negotiations â Est Complete", n:2},
-    {t:"Opp Won â Est Request", n:10}, {t:"In Negotiations â Opp Won", n:9},
-    {t:"Lead â Opp Lost", n:13}, {t:"Opportunity â Opp Lost", n:12}
+    {t:"Lead \u2192 Opportunity", n:38}, {t:"Opportunity \u2192 Opp Won", n:33},
+    {t:"Est Request \u2192 Est Review", n:9}, {t:"Est Review \u2192 In Negotiations", n:13},
+    {t:"Est Request \u2192 In Negotiations", n:7}, {t:"In Negotiations \u2192 Est Complete", n:2},
+    {t:"Opp Won \u2192 Est Request", n:10}, {t:"In Negotiations \u2192 Opp Won", n:9},
+    {t:"Lead \u2192 Opp Lost", n:13}, {t:"Opportunity \u2192 Opp Lost", n:12}
   ],
 
   pipeline: [
@@ -175,8 +175,8 @@ const DATA = {
   estCompleteClients: [
     {name:"Renee Jonovich", date:"4/22", ins:"Travelers", rcv:1254.31, supps:224.83, adjRCV:1479.14, increase:224.83, estimator:"Nel David"},
     {name:"Eldelmis Ampudia Leyva", date:"4/22", ins:"Allstate", rcv:2517.28, supps:0, adjRCV:0, increase:null, estimator:"Isaac Robinson"},
-    {name:"William Poynter", date:"4/23", ins:"â", rcv:0, supps:0, adjRCV:0, increase:null, estimator:"Isaac Robinson"},
-    {name:"Kurt Johnson", date:"5/1", ins:"â", rcv:0, supps:0, adjRCV:0, increase:null, estimator:"Nel David"}
+    {name:"William Poynter", date:"4/23", ins:"\u2014", rcv:0, supps:0, adjRCV:0, increase:null, estimator:"Isaac Robinson"},
+    {name:"Kurt Johnson", date:"5/1", ins:"\u2014", rcv:0, supps:0, adjRCV:0, increase:null, estimator:"Nel David"}
   ],
 
   topInNeg: [
@@ -192,8 +192,8 @@ const DATA = {
 };
 
 // ============ RENDER ============
-const fmt = n => n == null ? 'â' : '$' + n.toLocaleString('en-US', {minimumFractionDigits:0, maximumFractionDigits:0});
-const fmtD = n => n == null ? 'â' : '$' + n.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
+const fmt = n => n == null ? '\u2014' : '$' + n.toLocaleString('en-US', {minimumFractionDigits:0, maximumFractionDigits:0});
+const fmtD = n => n == null ? '\u2014' : '$' + n.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
 
 // Pipeline bar
 const totalPipeline = DATA.pipeline.reduce((s, p) => s + p.count, 0);
@@ -282,11 +282,11 @@ let totalIncrease = 0, increaseCount = 0;
 DATA.estCompleteClients.forEach(c => {
   if (c.increase) { totalIncrease += c.increase; increaseCount++; }
   const tr = document.createElement('tr');
-  tr.innerHTML = '<td>' + c.name + '</td><td>' + c.date + '</td><td>' + (c.ins || 'â') + '</td>' +
+  tr.innerHTML = '<td>' + c.name + '</td><td>' + c.date + '</td><td>' + (c.ins || '\u2014') + '</td>' +
     '<td style="text-align:right" class="money">' + fmtD(c.rcv) + '</td>' +
     '<td style="text-align:right" class="money">' + fmtD(c.supps) + '</td>' +
     '<td style="text-align:right" class="money">' + fmtD(c.adjRCV) + '</td>' +
-    '<td style="text-align:right" class="money ' + (c.increase > 0 ? 'pos' : '') + '">' + (c.increase ? '+' + fmtD(c.increase) : 'â') + '</td>' +
+    '<td style="text-align:right" class="money ' + (c.increase > 0 ? 'pos' : '') + '">' + (c.increase ? '+' + fmtD(c.increase) : '\u2014') + '</td>' +
     '<td>' + c.estimator + '</td>';
   ctbody.appendChild(tr);
 });
@@ -297,7 +297,7 @@ if (increaseCount > 0) {
   avgRow.style.borderTop = '2px solid var(--border)';
   const avgRCV = DATA.estCompleteClients.filter(c => c.adjRCV > 0).reduce((s,c) => s + c.adjRCV, 0) / DATA.estCompleteClients.filter(c => c.adjRCV > 0).length;
   avgRow.innerHTML = '<td colspan="3">Averages (' + DATA.estCompleteClients.length + ' clients)</td>' +
-    '<td style="text-align:right" class="money">â</td><td style="text-align:right" class="money">â</td>' +
+    '<td style="text-align:right" class="money">\u2014</td><td style="text-align:right" class="money">\u2014</td>' +
     '<td style="text-align:right" class="money">' + fmtD(avgRCV) + '</td>' +
     '<td style="text-align:right" class="money pos">+' + fmtD(totalIncrease / increaseCount) + '</td><td></td>';
   ctbody.appendChild(avgRow);
@@ -307,12 +307,12 @@ if (increaseCount > 0) {
 const ntbody = document.querySelector('#neg-table tbody');
 DATA.topInNeg.forEach(c => {
   const tr = document.createElement('tr');
-  tr.innerHTML = '<td>' + c.name + '</td><td>' + (c.ins || 'â') + '</td>' +
+  tr.innerHTML = '<td>' + c.name + '</td><td>' + (c.ins || '\u2014') + '</td>' +
     '<td style="text-align:right" class="money">' + fmtD(c.rcv) + '</td>' +
     '<td style="text-align:right" class="money">' + fmtD(c.requested) + '</td>' +
     '<td style="text-align:right" class="money">' + fmtD(c.supps) + '</td>' +
     '<td style="text-align:right" class="money">' + fmtD(c.adjRCV) + '</td>' +
-    '<td style="text-align:right" class="money ' + (c.increase > 0 ? 'pos' : '') + '">' + (c.increase ? '+' + fmtD(c.increase) : 'â') + '</td>' +
+    '<td style="text-align:right" class="money ' + (c.increase > 0 ? 'pos' : '') + '">' + (c.increase ? '+' + fmtD(c.increase) : '\u2014') + '</td>' +
     '<td>' + c.estimator + '</td>';
   ntbody.appendChild(tr);
 });
