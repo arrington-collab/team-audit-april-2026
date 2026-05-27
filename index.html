@@ -11,7 +11,7 @@
 </head>
 <body>
 <h1>ClaimsForce Weekly Team Activity</h1>
-<p class="subtitle">May 18 &ndash; 24, 2026 &middot; 14 Team Members &middot; Activity Log Data</p>
+<p class="subtitle">May 18 &ndash; 24, 2026 &middot; 13 Team Members &middot; Activity Log Data</p>
 <div id="team-grid" class="team-grid"></div>
 <div class="benchmark-note"><strong>Benchmark Note:</strong> Ashley Sacramento is the 5/10 midpoint. Hours estimated from action volume (~45 actions/hr calibration). Chris (Head of Claims Mgmt), Kneil, Yane, and Juan David (Senior Claims Analysts) evaluated with role context. Juan David, Yane, Kneil, and Chris D receive +2.5 hrs/day managerial credit for non-CRM supervisory work.</div>
 <div class="charts-row"><div class="chart-box"><h3>Total Volume by Type</h3><canvas id="volumeChart"></canvas></div><div class="chart-box"><h3>Productive Ratio</h3><canvas id="ratioChart"></canvas></div></div>
@@ -23,7 +23,6 @@ const teamData=[
 {name:"Mary Facio Rubio",role:"Claims Analyst",total:2428,reads:1360,creates:654,updates:414,productive:1068,ratio:0.79,activeDays:7,dailyRate:347,estHours:53.9,daily:{"05-18":{r:187,c:92,u:56},"05-19":{r:218,c:112,u:66},"05-20":{r:181,c:69,u:45},"05-21":{r:441,c:190,u:126},"05-22":{r:203,c:98,u:71},"05-23":{r:96,c:63,u:44},"05-24":{r:34,c:30,u:6}}},
 {name:"David Delgado",role:"Claims Analyst",total:1624,reads:891,creates:432,updates:301,productive:733,ratio:0.82,activeDays:5,dailyRate:325,estHours:36.1,daily:{"05-18":{r:141,c:50,u:44},"05-19":{r:196,c:133,u:69},"05-20":{r:245,c:116,u:76},"05-21":{r:173,c:80,u:69},"05-22":{r:136,c:53,u:43}}},
 {name:"Emmanuel Reblora",role:"Claims Analyst",total:1550,reads:798,creates:448,updates:304,productive:752,ratio:0.94,activeDays:5,dailyRate:310,estHours:34.4,daily:{"05-19":{r:132,c:133,u:62},"05-20":{r:282,c:92,u:70},"05-21":{r:266,c:144,u:116},"05-22":{r:106,c:74,u:52},"05-23":{r:12,c:5,u:4}}},
-{name:"Gerald Banaag",role:"Claims Analyst",total:97,reads:71,creates:16,updates:10,productive:26,ratio:0.37,activeDays:5,dailyRate:19,estHours:2.2,daily:{"05-18":{r:25,c:8,u:3},"05-19":{r:25,c:6,u:6},"05-20":{r:2,c:0,u:0},"05-21":{r:10,c:2,u:0},"05-22":{r:9,c:0,u:1}}},
 {name:"Daniel Davila",role:"Claims Analyst",total:1795,reads:772,creates:657,updates:366,productive:1023,ratio:1.33,activeDays:6,dailyRate:299,estHours:39.9,daily:{"05-19":{r:167,c:132,u:74},"05-20":{r:230,c:195,u:114},"05-21":{r:133,c:119,u:68},"05-22":{r:99,c:99,u:51},"05-23":{r:140,c:112,u:59},"05-24":{r:3,c:0,u:0}}},
 {name:"Raphael Rivera",role:"Claims Analyst",total:2170,reads:1072,creates:700,updates:398,productive:1098,ratio:1.02,activeDays:6,dailyRate:362,estHours:48.2,daily:{"05-18":{r:211,c:149,u:87},"05-19":{r:177,c:125,u:74},"05-20":{r:263,c:150,u:77},"05-21":{r:198,c:148,u:73},"05-22":{r:178,c:94,u:62},"05-23":{r:45,c:34,u:25}}},
 {name:"Ashley Sacramento",role:"Claims Coordinator",total:1360,reads:607,creates:454,updates:299,productive:753,ratio:1.24,activeDays:5,dailyRate:272,estHours:30.2,daily:{"05-18":{r:96,c:108,u:106},"05-19":{r:150,c:65,u:38},"05-20":{r:81,c:58,u:19},"05-21":{r:168,c:127,u:117},"05-22":{r:112,c:96,u:19}}},
@@ -35,7 +34,7 @@ const teamData=[
 {name:"Kneil De Jesus",role:"Senior Claims Analyst",total:801,reads:482,creates:217,updates:102,productive:319,ratio:0.66,activeDays:5,dailyRate:160,estHours:17.8,mgmt:true,daily:{"05-18":{r:88,c:37,u:17},"05-19":{r:114,c:48,u:29},"05-20":{r:63,c:40,u:14},"05-21":{r:136,c:44,u:28},"05-22":{r:81,c:48,u:14}}}
 ];
 teamData.forEach(m=>{m.mgmtHours=m.mgmt?(2.5*m.activeDays):0;m.totalHours=parseFloat(m.estHours)+m.mgmtHours});
-const benchmarkTotal=teamData[7].total;
+const benchmarkTotal=teamData[6].total;
 function calcScore(m){const pct=m.total/benchmarkTotal;if(m.mgmt){const adjPct=(m.total+(m.mgmtHours*45))/benchmarkTotal;if(adjPct>=1.8)return 10;if(adjPct>=1.6)return 9;if(adjPct>=1.4)return 8;if(adjPct>=1.2)return 7;if(adjPct>=1.0)return 6;if(adjPct>=0.8)return 5;if(adjPct>=0.6)return 4;if(adjPct>=0.4)return 3;if(adjPct>=0.2)return 2;return 1}if(pct>=1.8)return 10;if(pct>=1.6)return 9;if(pct>=1.4)return 8;if(pct>=1.2)return 7;if(pct>=1.0)return 6;if(pct>=0.8)return 5;if(pct>=0.6)return 4;if(pct>=0.4)return 3;if(pct>=0.2)return 2;return 1}
 teamData.forEach(m=>m.score=calcScore(m));
 teamData.sort((a,b)=>b.score-a.score||b.total-a.total);
