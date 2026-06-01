@@ -33,7 +33,7 @@ const teamData=[
 {name:"Chris Dimaculangan",role:"Head of Claims Mgmt",total:396,reads:323,creates:64,updates:9,productive:73,ratio:0.23,activeDays:6,dailyRate:66,estHours:8.8,mgmt:true,daily:{"05-26":{r:53,c:11,u:0},"05-27":{r:62,c:15,u:2},"05-28":{r:82,c:22,u:5},"05-29":{r:106,c:12,u:0},"05-30":{r:9,c:2,u:2},"05-31":{r:11,c:4,u:1}}},
 {name:"Kneil De Jesus",role:"Senior Claims Analyst",total:319,reads:219,creates:71,updates:29,productive:100,ratio:0.46,activeDays:4,dailyRate:80,estHours:7.1,mgmt:true,daily:{"05-26":{r:54,c:26,u:5},"05-27":{r:84,c:17,u:12},"05-28":{r:38,c:14,u:5},"05-29":{r:43,c:14,u:7}}}
 ];
-teamData.forEach(m=>{m.mgmtHours=m.mgmt?(2.5*m.activeDays):0;m.totalHours=parseFloat(m.estHours)+m.mgmtHours});
+teamData.forEach(m=>{m.mgmtHours=m.mgmt?15:0;m.totalHours=parseFloat(m.estHours)+m.mgmtHours});
 const benchmarkTotal=teamData.find(m=>m.name==='Ashley Sacramento').total;
 function calcScore(m){const pct=m.total/benchmarkTotal;if(m.mgmt){const adjPct=(m.total+(m.mgmtHours*45))/benchmarkTotal;if(adjPct>=1.8)return 10;if(adjPct>=1.6)return 9;if(adjPct>=1.4)return 8;if(adjPct>=1.2)return 7;if(adjPct>=1.0)return 6;if(adjPct>=0.8)return 5;if(adjPct>=0.6)return 4;if(adjPct>=0.4)return 3;if(adjPct>=0.2)return 2;return 1}if(pct>=1.8)return 10;if(pct>=1.6)return 9;if(pct>=1.4)return 8;if(pct>=1.2)return 7;if(pct>=1.0)return 6;if(pct>=0.8)return 5;if(pct>=0.6)return 4;if(pct>=0.4)return 3;if(pct>=0.2)return 2;return 1}
 teamData.forEach(m=>m.score=calcScore(m));
