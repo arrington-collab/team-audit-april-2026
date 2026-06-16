@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ClaimsForce Weekly Team Activity + Calls â June 8-14, 2026</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#1a1a2e;color:#e0e0e0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;padding:20px}
+h1{text-align:center;font-size:2em;margin-bottom:4px;color:#fff}
+.subtitle{text-align:center;color:#888;margin-bottom:20px;font-size:.95em}
+.team-grid{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-bottom:24px}
+.member-card{background:#16213e;border:1px solid #2a2a4a;border-radius:12px;padding:16px;min-width:170px;text-align:center;position:relative}
+.score-circle{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;font-size:1.4em;font-weight:700;color:#fff}
+.score-10{background:#27ae60}.score-9{background:#2ecc71}.score-8{background:#8e44ad}.score-7{background:#8e44ad}.score-6{background:#e67e22}.score-5{background:#e67e22}.score-4{background:#e74c3c}.score-3{background:#e74c3c}.score-2,.score-1{background:#c0392b}
+.member-name{font-weight:600;font-size:.95em;color:#fff}
+.member-role{font-size:.75em;color:#888;margin-top:2px}
+.member-hours{font-size:.8em;color:#aaa;margin-top:4px}
+.member-calls{font-size:.75em;color:#3498db;margin-top:3px;font-weight:600}
+.mgmt-tag{font-size:.65em;color:#3498db;margin-top:2px}
+.benchmark-note{background:#16213e;border-left:4px solid #f1c40f;padding:12px 16px;margin-bottom:24px;border-radius:0 8px 8px 0;font-size:.85em;line-height:1.5}
+.benchmark-note strong{color:#f1c40f}
+.section-title{color:#fff;font-size:1.3em;margin:30px 0 16px;padding-bottom:8px;border-bottom:2px solid #2a2a4a}
+.charts-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
+.chart-box{background:#16213e;border:1px solid #2a2a4a;border-radius:12px;padding:16px}
+.chart-box h3{color:#fff;font-size:1em;margin-bottom:12px}
+.detail-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:24px}
+.detail-card{background:#16213e;border:1px solid #2a2a4a;border-radius:12px;padding:16px}
+.detail-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+.detail-name{font-weight:700;font-size:1.05em;color:#fff}
+.detail-role{font-size:.78em;color:#888}
+.detail-score{font-size:1.5em;font-weight:700}
+.detail-score.green{color:#2ecc71}.detail-score.yellow{color:#f1c40f}.detail-score.orange{color:#e67e22}.detail-score.red{color:#e74c3c}
+.metrics-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px}
+.metric{background:#1a1a2e;border-radius:8px;padding:8px;text-align:center}
+.metric-value{font-size:1.05em;font-weight:700;color:#fff}
+.metric-label{font-size:.6em;color:#888;text-transform:uppercase;margin-top:2px}
+.call-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px}
+.call-metric{background:#0d1b2a;border:1px solid #1a3a5c;border-radius:8px;padding:8px;text-align:center}
+.call-metric .metric-value{color:#3498db}
+.call-metric .metric-label{color:#5dade2}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.tag{font-size:.7em;padding:3px 8px;border-radius:4px;font-weight:600}
+.tag-green{background:#27ae60;color:#fff}.tag-blue{background:#2980b9;color:#fff}.tag-yellow{background:#f39c12;color:#fff}.tag-red{background:#e74c3c;color:#fff}.tag-purple{background:#8e44ad;color:#fff}.tag-cyan{background:#16a085;color:#fff}
+.detail-summary{font-size:.8em;color:#aaa;line-height:1.4;margin-bottom:10px}
+.combined-table{width:100%;border-collapse:collapse;margin-bottom:24px;font-size:.85em}
+.combined-table th{background:#0d1b2a;color:#fff;padding:10px 8px;text-align:left;border-bottom:2px solid #3498db;font-weight:600;white-space:nowrap}
+.combined-table td{padding:8px;border-bottom:1px solid #2a2a4a;white-space:nowrap}
+.combined-table tr:hover{background:#1e2d4a}
+.combined-table .num{text-align:right;font-variant-numeric:tabular-nums}
+.combined-table .name-col{font-weight:600;color:#fff}
+.crm-header{border-bottom-color:#8e44ad!important;color:#bb86fc!important}
+.rc-header{border-bottom-color:#3498db!important;color:#5dade2!important}
+.highlight-high{color:#2ecc71}.highlight-mid{color:#f1c40f}.highlight-low{color:#e74c3c}
+@media(max-width:1200px){.detail-grid{grid-template-columns:1fr}}
+@media(max-width:800px){.charts-row{grid-template-columns:1fr}.combined-table{font-size:.75em}}
+</style>
+</head>
+<body>
+<h1>ClaimsForce Weekly Team Activity + Calls</h1>
+<p class="subtitle">June 8 &ndash; 14, 2026 &middot; 13 Team Members &middot; CRM Activity Log + RingCentral Call Data</p>
+
+<div id="team-grid" class="team-grid"></div>
+
+<div class="benchmark-note"><strong>Benchmark Note:</strong> Ashley Sacramento is the 5/10 midpoint. Hours estimated from action volume (~45 actions/hr calibration). Management receives +2.5 hrs/day managerial credit. RingCentral call data covers the same week (June 8&ndash;14). SMS data not available in RingCentral Performance Reports.</div>
+
+<h2 class="section-title">Combined Scoreboard</h2>
+<div style="overflow-x:auto">
+<table class="combined-table" id="scoreboard">
+<thead>
+<tr>
+<th>Name</th>
+<th>Role</th>
+<th>Score</th>
+<th class="crm-header num">CRM Total</th>
+<th class="crm-header num">Reads</th>
+<th class="crm-header num">Creates</th>
+<th class="crm-header num">Updates</th>
+<th class="crm-header num">Est. Hrs</th>
+<th class="rc-header num">Calls</th>
+<th class="rc-header num">Avg/Day</th>
+<th class="rc-header num">Inbound</th>
+<th class="rc-header num">Outbound</th>
+<th class="rc-header num">% Missed</th>
+<th class="rc-header num">Avg Handle</th>
+<th class="num" style="color:#2ecc71">Combined Hrs</th>
+</tr>
+</thead>
+<tbody id="scoreboard-body"></tbody>
+</table>
+</div>
+
+<h2 class="section-title">CRM Activity Charts</h2>
+<div class="charts-row">
+<div class="chart-box"><h3>Total Volume by Type</h3><canvas id="volumeChart"></canvas></div>
+<div class="chart-box"><h3>Productive Ratio (Creates+Updates / Reads)</h3><canvas id="ratioChart"></canvas></div>
+</div>
+
+<h2 class="section-title">Call Activity Charts</h2>
+<div class="charts-row">
+<div class="chart-box"><h3>Total Calls (Inbound vs Outbound)</h3><canvas id="callChart"></canvas></div>
+<div class="chart-box"><h3>Average Handle Time (minutes)</h3><canvas id="handleChart"></canvas></div>
+</div>
+
+<h2 class="section-title">CRM Hours vs Call Hours</h2>
+<div class="charts-row">
+<div class="chart-box"><h3>Estimated Hours Breakdown</h3><canvas id="hoursBreakdownChart"></canvas></div>
+<div class="chart-box"><h3>Activity Mix: CRM Actions vs Calls</h3><canvas id="activityMixChart"></canvas></div>
+</div>
+
+<h2 class="section-title">Individual Member Details</h2>
+<div id="detail-grid" class="detail-grid"></div>
+
+<script>
+const teamData=[
+{name:"Emmanuel Reblora",role:"Claims Analyst",total:2095,reads:1017,creates:703,updates:356,productive:1059,ratio:1.04,activeDays:6,dailyRate:349,estHours:33.8,daily:{"06-08":{r:137,c:96,u:54},"06-09":{r:87,c:95,u:37},"06-10":{r:246,c:186,u:92},"06-11":{r:151,c:93,u:40},"06-12":{r:392,c:233,u:133},"06-13":{r:4,c:0,u:0}}},
+{name:"Sheena Lalunio",role:"Claims Analyst",total:1958,reads:888,creates:719,updates:340,productive:1059,ratio:1.19,activeDays:5,dailyRate:392,estHours:34,daily:{"06-08":{r:121,c:108,u:57},"06-09":{r:40,c:32,u:23},"06-10":{r:189,c:212,u:115},"06-11":{r:179,c:177,u:73},"06-12":{r:359,c:190,u:72}}},
+{name:"Mary Facio Rubio",role:"Claims Analyst",total:1942,reads:1146,creates:516,updates:277,productive:793,ratio:0.69,activeDays:7,dailyRate:277,estHours:44.6,daily:{"06-08":{r:297,c:121,u:52},"06-09":{r:263,c:138,u:62},"06-10":{r:86,c:30,u:20},"06-11":{r:184,c:74,u:41},"06-12":{r:219,c:102,u:72},"06-13":{r:96,c:51,u:30},"06-14":{r:1,c:0,u:0}}},
+{name:"Raphael Rivera",role:"Claims Analyst",total:1845,reads:1064,creates:494,updates:278,productive:772,ratio:0.73,activeDays:6,dailyRate:308,estHours:40.1,daily:{"06-08":{r:247,c:89,u:53},"06-09":{r:289,c:168,u:84},"06-10":{r:242,c:131,u:81},"06-11":{r:201,c:104,u:58},"06-13":{r:29,c:1,u:1},"06-14":{r:56,c:1,u:1}}},
+{name:"David Delgado",role:"Claims Analyst",total:1545,reads:837,creates:424,updates:278,productive:702,ratio:0.84,activeDays:5,dailyRate:309,estHours:25.6,daily:{"06-09":{r:174,c:75,u:33},"06-10":{r:300,c:155,u:102},"06-11":{r:189,c:128,u:92},"06-12":{r:173,c:66,u:50},"06-13":{r:1,c:0,u:1}}},
+{name:"Daniel Davila",role:"Claims Analyst",total:1528,reads:634,creates:579,updates:312,productive:891,ratio:1.41,activeDays:7,dailyRate:218,estHours:23.6,daily:{"06-08":{r:153,c:93,u:62},"06-09":{r:146,c:183,u:78},"06-10":{r:139,c:105,u:68},"06-11":{r:116,c:102,u:59},"06-12":{r:3,c:17,u:9},"06-13":{r:37,c:42,u:16},"06-14":{r:40,c:37,u:20}}},
+{name:"Ashley Sacramento",role:"Claims Coordinator",total:1454,reads:631,creates:506,updates:313,productive:819,ratio:1.3,activeDays:5,dailyRate:291,estHours:24.9,daily:{"06-08":{r:81,c:62,u:18},"06-09":{r:187,c:125,u:46},"06-10":{r:165,c:177,u:126},"06-11":{r:97,c:33,u:10},"06-12":{r:101,c:109,u:113}}},
+{name:"Hacey Bonus",role:"Claims Coordinator",total:1327,reads:753,creates:417,updates:130,productive:547,ratio:0.73,activeDays:5,dailyRate:265,estHours:22.2,daily:{"06-08":{r:351,c:207,u:66},"06-09":{r:88,c:66,u:20},"06-10":{r:132,c:49,u:10},"06-11":{r:146,c:80,u:34},"06-12":{r:36,c:15,u:0}}},
+{name:"Carlos Villanueva",role:"Claims Coordinator",total:0,reads:0,creates:0,updates:0,productive:0,ratio:0,activeDays:0,dailyRate:0,estHours:0,daily:{}},
+{name:"Yane Vacca",role:"Senior Claims Analyst",total:634,reads:468,creates:108,updates:56,productive:164,ratio:0.35,activeDays:4,dailyRate:159,estHours:28.9,mgmt:true,daily:{"06-08":{r:92,c:43,u:19},"06-09":{r:159,c:35,u:26},"06-10":{r:163,c:22,u:6},"06-11":{r:54,c:8,u:5}}},
+{name:"Chris Dimaculangan",role:"Head of Claims Mgmt",total:577,reads:493,creates:73,updates:10,productive:83,ratio:0.17,activeDays:5,dailyRate:115,estHours:22.3,mgmt:true,daily:{"06-08":{r:125,c:36,u:2},"06-09":{r:99,c:13,u:6},"06-10":{r:86,c:5,u:1},"06-11":{r:53,c:10,u:0},"06-12":{r:130,c:9,u:1}}},
+{name:"Kneil De Jesus",role:"Senior Claims Analyst",total:477,reads:299,creates:109,updates:69,productive:178,ratio:0.6,activeDays:5,dailyRate:95,estHours:17.1,mgmt:true,daily:{"06-08":{r:48,c:25,u:31},"06-09":{r:69,c:29,u:11},"06-10":{r:54,c:29,u:11},"06-11":{r:110,c:8,u:2},"06-12":{r:18,c:18,u:14}}},
+{name:"Juan David Valencia",role:"Senior Claims Analyst",total:369,reads:297,creates:69,updates:3,productive:72,ratio:0.24,activeDays:5,dailyRate:74,estHours:21.5,mgmt:true,daily:{"06-08":{r:94,c:41,u:1},"06-09":{r:52,c:16,u:0},"06-10":{r:76,c:10,u:1},"06-11":{r:44,c:0,u:0},"06-12":{r:31,c:2,u:1}}}
+];
+
+// RingCentral call data: name, ext, totalCalls, avgCallsPerDay, inbound, outbound, pctMissed, avgHandleTime
+const rcData=[
+{name:"Ashley Sacramento",ext:138,totalCalls:92,avgPerDay:13.14,inbound:25,outbound:67,pctMissed:"20.0%",avgHandle:"03:50"},
+{name:"Carlos Villanueva",ext:113,totalCalls:3,avgPerDay:0.43,inbound:3,outbound:0,pctMissed:"100.0%",avgHandle:"00:00"},
+{name:"Chris Dimaculangan",ext:104,totalCalls:15,avgPerDay:2.14,inbound:10,outbound:5,pctMissed:"20.0%",avgHandle:"02:27"},
+{name:"Daniel Davila",ext:131,totalCalls:120,avgPerDay:17.14,inbound:32,outbound:88,pctMissed:"56.3%",avgHandle:"04:46"},
+{name:"David Delgado",ext:122,totalCalls:71,avgPerDay:10.14,inbound:46,outbound:25,pctMissed:"76.1%",avgHandle:"04:08"},
+{name:"Emmanuel Reblora",ext:141,totalCalls:138,avgPerDay:19.71,inbound:26,outbound:112,pctMissed:"30.8%",avgHandle:"05:18"},
+{name:"Hacey Bonus",ext:139,totalCalls:69,avgPerDay:9.86,inbound:47,outbound:22,pctMissed:"0.0%",avgHandle:"04:04"},
+{name:"Juan David Valencia",ext:124,totalCalls:15,avgPerDay:2.14,inbound:7,outbound:8,pctMissed:"0.0%",avgHandle:"05:31"},
+{name:"Kneil De Jesus",ext:137,totalCalls:5,avgPerDay:0.71,inbound:2,outbound:3,pctMissed:"100.0%",avgHandle:"00:27"},
+{name:"Mary Facio Rubio",ext:142,totalCalls:149,avgPerDay:21.29,inbound:50,outbound:99,pctMissed:"62.0%",avgHandle:"05:10"},
+{name:"Raphael Rivera",ext:121,totalCalls:141,avgPerDay:20.14,inbound:67,outbound:74,pctMissed:"53.7%",avgHandle:"03:29"},
+{name:"Sheena Lalunio",ext:140,totalCalls:92,avgPerDay:13.14,inbound:30,outbound:62,pctMissed:"70.0%",avgHandle:"04:29"},
+{name:"Yane Vacca",ext:191,totalCalls:0,avgPerDay:0,inbound:0,outbound:0,pctMissed:"0.0%",avgHandle:"00:00"}
+];
+
+// Parse handle time MM:SS to decimal minutes
+function handleToMin(s){const p=s.split(':');return parseInt(p[0])+parseInt(p[1])/60}
+
+// Match RC data to team members
+function findRC(name){
+  const n=name.toLowerCase();
+  return rcData.find(r=>{
+    const rn=r.name.toLowerCase();
+    if(rn===n)return true;
+    if(n.indexOf(rn.split(' ')[0])>=0 && (rn.indexOf(n.split(' ').pop())>=0 || n.indexOf(rn.split(' ').pop())>=0))return true;
+    // Special cases
+    if(n.includes('hacey') && rn.includes('hac'))return true;
+    if(n.includes('juan') && rn.includes('juan'))return true;
+    if(n.includes('david delgado') && rn.includes('david delgado'))return true;
+    return false;
+  });
+}
+
+// Enrich team data with RC
+teamData.forEach(m=>{
+  m.mgmtHours=m.mgmt?15:0;
+  m.totalHours=parseFloat(m.estHours)+m.mgmtHours;
+  const rc=findRC(m.name);
+  if(rc){
+    m.rc=rc;
+    const avgMin=handleToMin(rc.avgHandle);
+    m.callMinutes=avgMin*rc.totalCalls;
+    m.callHours=m.callMinutes/60;
+    m.combinedHours=m.totalHours+m.callHours;
+  } else {
+    m.rc={totalCalls:0,avgPerDay:0,inbound:0,outbound:0,pctMissed:"0%",avgHandle:"00:00"};
+    m.callHours=0;m.callMinutes=0;m.combinedHours=m.totalHours;
+  }
+});
+
+const benchmarkTotal=teamData.find(m=>m.name==='Ashley Sacramento').total;
+function calcScore(m){const pct=m.total/benchmarkTotal;if(m.mgmt){const adjPct=(m.total+(m.mgmtHours*45))/benchmarkTotal;if(adjPct>=1.8)return 10;if(adjPct>=1.6)return 9;if(adjPct>=1.4)return 8;if(adjPct>=1.2)return 7;if(adjPct>=1.0)return 6;if(adjPct>=0.8)return 5;if(adjPct>=0.6)return 4;if(adjPct>=0.4)return 3;if(adjPct>=0.2)return 2;return 1}if(pct>=1.8)return 10;if(pct>=1.6)return 9;if(pct>=1.4)return 8;if(pct>=1.2)return 7;if(pct>=1.0)return 6;if(pct>=0.8)return 5;if(pct>=0.6)return 4;if(pct>=0.4)return 3;if(pct>=0.2)return 2;return 1}
+teamData.forEach(m=>m.score=calcScore(m));
+teamData.sort((a,b)=>b.score-a.score||b.total-a.total);
+
+// Score cards
+const gridEl=document.getElementById('team-grid');
+teamData.forEach(m=>{const card=document.createElement('div');card.className='member-card';card.innerHTML='<div class="score-circle score-'+m.score+'">'+m.score+'</div><div class="member-name">'+m.name+'</div><div class="member-role">'+m.role+'</div><div class="member-hours">'+m.totalHours.toFixed(1)+'h est.'+(m.mgmt?' (incl. mgmt)':'')+'</div><div class="member-calls">'+m.rc.totalCalls+' calls &middot; '+m.callHours.toFixed(1)+'h on phone</div>'+(m.mgmt?'<div class="mgmt-tag">+'+m.mgmtHours.toFixed(1)+'h managerial</div>':'');gridEl.appendChild(card)});
+
+// Scoreboard table
+const tbody=document.getElementById('scoreboard-body');
+teamData.forEach(m=>{
+  const scoreColor=m.score>=8?'highlight-high':m.score>=5?'highlight-mid':'highlight-low';
+  const tr=document.createElement('tr');
+  tr.innerHTML='<td class="name-col">'+m.name+'</td><td>'+m.role+'</td><td class="num '+scoreColor+'">'+m.score+'/10</td><td class="num">'+m.total.toLocaleString()+'</td><td class="num">'+m.reads.toLocaleString()+'</td><td class="num">'+m.creates.toLocaleString()+'</td><td class="num">'+m.updates.toLocaleString()+'</td><td class="num">'+m.totalHours.toFixed(1)+'h</td><td class="num">'+m.rc.totalCalls+'</td><td class="num">'+m.rc.avgPerDay+'</td><td class="num">'+m.rc.inbound+'</td><td class="num">'+m.rc.outbound+'</td><td class="num">'+m.rc.pctMissed+'</td><td class="num">'+m.rc.avgHandle+'</td><td class="num" style="color:#2ecc71;font-weight:700">'+m.combinedHours.toFixed(1)+'h</td>';
+  tbody.appendChild(tr);
+});
+
+// Chart helpers
+const names=teamData.map(m=>m.name.split(' ')[0]+' '+m.name.split(' ').pop()[0]+'.');
+const chartOpts={responsive:true,plugins:{legend:{labels:{color:'#aaa'}}},scales:{x:{ticks:{color:'#888'}},y:{ticks:{color:'#888'},grid:{color:'#2a2a4a'}}}};
+
+// CRM Volume chart
+new Chart(document.getElementById('volumeChart'),{type:'bar',data:{labels:names,datasets:[{label:'Reads',data:teamData.map(m=>m.reads),backgroundColor:'#6c5ce7'},{label:'Creates',data:teamData.map(m=>m.creates),backgroundColor:'#2ecc71'},{label:'Updates',data:teamData.map(m=>m.updates),backgroundColor:'#f39c12'}]},options:{...chartOpts,scales:{...chartOpts.scales,x:{...chartOpts.scales.x,stacked:true},y:{...chartOpts.scales.y,stacked:true}}}});
+
+// Ratio chart
+new Chart(document.getElementById('ratioChart'),{type:'bar',data:{labels:names,datasets:[{label:'Productive Ratio',data:teamData.map(m=>m.ratio),backgroundColor:teamData.map(m=>m.ratio>=1?'#2ecc71':m.ratio>=0.7?'#f39c12':'#e74c3c')}]},options:chartOpts});
+
+// Call chart (stacked inbound/outbound)
+new Chart(document.getElementById('callChart'),{type:'bar',data:{labels:names,datasets:[{label:'Inbound',data:teamData.map(m=>m.rc.inbound),backgroundColor:'#3498db'},{label:'Outbound',data:teamData.map(m=>m.rc.outbound),backgroundColor:'#1abc9c'}]},options:{...chartOpts,scales:{...chartOpts.scales,x:{...chartOpts.scales.x,stacked:true},y:{...chartOpts.scales.y,stacked:true}}}});
+
+// Handle time chart (in minutes)
+new Chart(document.getElementById('handleChart'),{type:'bar',data:{labels:names,datasets:[{label:'Avg Handle (min)',data:teamData.map(m=>handleToMin(m.rc.avgHandle)),backgroundColor:teamData.map(m=>{const mins=handleToMin(m.rc.avgHandle);return mins>=4?'#2ecc71':mins>=2?'#f39c12':'#e74c3c'})}]},options:chartOpts});
+
+// Combined hours breakdown
+new Chart(document.getElementById('hoursBreakdownChart'),{type:'bar',data:{labels:names,datasets:[{label:'CRM Hours',data:teamData.map(m=>parseFloat(m.estHours)),backgroundColor:'#e67e22'},{label:'Managerial Hours',data:teamData.map(m=>m.mgmtHours),backgroundColor:'#3498db'},{label:'Call Hours',data:teamData.map(m=>m.callHours),backgroundColor:'#1abc9c'}]},options:{...chartOpts,scales:{...chartOpts.scales,x:{...chartOpts.scales.x,stacked:true},y:{...chartOpts.scales.y,stacked:true}}}});
+
+// Activity mix scatter
+new Chart(document.getElementById('activityMixChart'),{type:'scatter',data:{datasets:[{label:'Team Members',data:teamData.filter(m=>m.total>0).map(m=>({x:m.total,y:m.rc.totalCalls,label:m.name})),backgroundColor:teamData.filter(m=>m.total>0).map(m=>m.score>=8?'#2ecc71':m.score>=5?'#f39c12':'#e74c3c'),pointRadius:8}]},options:{...chartOpts,plugins:{...chartOpts.plugins,tooltip:{callbacks:{label:function(ctx){return teamData.filter(m=>m.total>0)[ctx.dataIndex].name+': '+ctx.parsed.x+' actions, '+ctx.parsed.y+' calls'}}}},scales:{x:{title:{display:true,text:'CRM Actions',color:'#aaa'},ticks:{color:'#888'},grid:{color:'#2a2a4a'}},y:{title:{display:true,text:'Total Calls',color:'#aaa'},ticks:{color:'#888'},grid:{color:'#2a2a4a'}}}}});
+
+// Detail cards
+const detailEl=document.getElementById('detail-grid');
+teamData.forEach(m=>{
+  const pctBench=((m.total/benchmarkTotal)*100).toFixed(0);
+  const scoreColor=m.score>=8?'green':m.score>=5?'yellow':m.score>=3?'orange':'red';
+  let tags=[];
+  if(m.score>=8)tags.push('<span class="tag tag-green">Top Performer</span>');
+  if(m.ratio>=1.0)tags.push('<span class="tag tag-blue">Efficient</span>');
+  if(m.creates>m.reads*0.5)tags.push('<span class="tag tag-yellow">High Creator</span>');
+  if(m.totalHours>=40)tags.push('<span class="tag tag-green">40+ Hrs/Wk</span>');
+  if(m.mgmt)tags.push('<span class="tag tag-purple">+Managerial</span>');
+  if(m.rc.totalCalls>=100)tags.push('<span class="tag tag-cyan">High Caller</span>');
+  if(m.activeDays<=3&&m.total>0)tags.push('<span class="tag tag-red">Low Activity</span>');
+  if(m.total===0)tags.push('<span class="tag tag-red">No CRM Activity</span>');
+
+  const avgHrsDay=(m.combinedHours/(m.activeDays||1)).toFixed(1);
+  let summary=m.name+' logged '+m.total.toLocaleString()+' CRM actions ('+pctBench+'% of benchmark) and '+m.rc.totalCalls+' calls ('+m.callHours.toFixed(1)+'h on phone). Combined '+m.combinedHours.toFixed(1)+'h estimated across '+m.activeDays+' active days.';
+  if(m.mgmt)summary+=' Includes '+m.mgmtHours.toFixed(1)+'h managerial credit.';
+  if(m.rc.totalCalls>0)summary+=' Avg handle time '+m.rc.avgHandle+'/call, '+m.rc.pctMissed+' missed.';
+
+  const cardId='chart-'+m.name.replace(/\s/g,'');
+  const card=document.createElement('div');
+  card.className='detail-card';
+  card.innerHTML='<div class="detail-header"><div><div class="detail-name">'+m.name+'</div><div class="detail-role">'+m.role+'</div></div><div class="detail-score '+scoreColor+'">'+m.score+'/10</div></div>'+
+    '<div class="metrics-grid"><div class="metric"><div class="metric-value">'+m.total.toLocaleString()+'</div><div class="metric-label">CRM Total</div></div><div class="metric"><div class="metric-value">'+m.productive.toLocaleString()+'</div><div class="metric-label">Productive</div></div><div class="metric"><div class="metric-value">'+m.ratio+'</div><div class="metric-label">Ratio</div></div><div class="metric"><div class="metric-value">'+m.totalHours.toFixed(1)+'h</div><div class="metric-label">CRM Hrs</div></div></div>'+
+    '<div class="call-metrics"><div class="call-metric"><div class="metric-value">'+m.rc.totalCalls+'</div><div class="metric-label">Calls</div></div><div class="call-metric"><div class="metric-value">'+m.rc.inbound+'/'+m.rc.outbound+'</div><div class="metric-label">In/Out</div></div><div class="call-metric"><div class="metric-value">'+m.rc.pctMissed+'</div><div class="metric-label">Missed</div></div><div class="call-metric"><div class="metric-value">'+m.rc.avgHandle+'</div><div class="metric-label">Avg Handle</div></div></div>'+
+    '<div class="tags">'+tags.join('')+'</div>'+
+    '<div class="detail-summary">'+summary+'</div>'+
+    '<canvas id="'+cardId+'" height="80"></canvas>';
+  detailEl.appendChild(card);
+
+  setTimeout(()=>{
+    const days=Object.keys(m.daily).sort();
+    if(days.length===0)return;
+    const dayLabels=days.map(d=>{const dt=new Date('2026-'+d);return['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][dt.getDay()]});
+    new Chart(document.getElementById(cardId),{type:'bar',data:{labels:dayLabels,datasets:[{label:'Reads',data:days.map(d=>m.daily[d].r),backgroundColor:'#6c5ce7'},{label:'Creates',data:days.map(d=>m.daily[d].c),backgroundColor:'#2ecc71'},{label:'Updates',data:days.map(d=>m.daily[d].u),backgroundColor:'#f39c12'}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{x:{stacked:true,ticks:{color:'#888'}},y:{stacked:true,ticks:{color:'#888'},grid:{color:'#2a2a4a'}}}}})
+  },100);
+});
+</script>
+</body>
+</html>
